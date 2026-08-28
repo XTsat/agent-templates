@@ -1,21 +1,28 @@
-# {{ plugin_name }} — AstrBot 插件
+<div align="center">
 
-> {{ description }}
+<h1>DisplayName</h1>
 
-## 功能
+<p><strong>插件描述（desc）</strong></p>
+
+<p><sub>标签1 &nbsp;&nbsp; 标签2 &nbsp;&nbsp; 标签3</sub></p>
+
+<p><strong>中文</strong> &nbsp;/&nbsp; <a href="README_en.md">English</a></p>
+
+</div>
+
+## 功能与指令
+
+### 功能
 
 - 功能 1：说明
 - 功能 2：说明
 
-## 使用
+### 指令
 
 | 命令 | 权限 | 说明 |
 |------|------|------|
 | `/{prefix} help` | 全部 | 显示帮助 |
-
-## 安装
-
-将本仓库克隆到 AstrBot 的 `addons/` 目录下，重启 AstrBot 即可。
+| `/{prefix} sub` | 管理员 | 子功能说明 |
 
 ## 配置
 
@@ -24,11 +31,17 @@
 | `timeout` | int | 30 | 超时时间（秒） |
 | `max_retries` | int | 3 | 最大重试次数 |
 
-## 常见问题
+## 其它
 
-- **问题**：说明
-  - 解答：说明
+### 安装
 
-## License
+将本仓库克隆到 AstrBot 的 `addons/` 目录下，重启 AstrBot 即可。
+
+### 依赖
+
+- Python 3.10+
+- AstrBot >= 4.x
+
+### License
 
 AGPL-3.0

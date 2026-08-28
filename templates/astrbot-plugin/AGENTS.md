@@ -241,7 +241,7 @@ async def on_message(self, event: AstrMessageEvent):
 
 #### 格式
 
-统一使用 **扁平前缀式**（参考 `astrbot_plugin_msg_forward_cc`）：
+统一使用 **扁平前缀式**：
 
 ```markdown
 # Changelog
@@ -277,20 +277,83 @@ async def on_message(self, event: AstrMessageEvent):
 
 ### 7.2 README 维护
 
-**何时必须更新 README：**
+#### 7.2.1 头部的表头格式
 
-| 改动类型 | 必须更新的 README 位置 |
-|----------|----------------------|
-| 功能新增/删除 | 「功能」列表 |
-| 使用方式/命令变化 | 「使用」章节（含命令表格） |
-| 配置项变化 | 「插件配置」表格、`_conf_schema.json` 说明 |
-| 依赖/版本要求变化 | 「依赖」或「快速开始」章节 |
-| 已知问题/行为变化 | 「常见问题」或相关章节 |
+每个插件维护 **两个** README（中文 `README.md` + 英文 `README_en.md`），任何修改必须两文件同步。表头格式如下：
+
+**中文版（`README.md`）：**
+
+```html
+<div align="center">
+
+<h1>DisplayName</h1>
+
+<p><strong>插件描述（desc）</strong></p>
+
+<p><sub>标签1 &nbsp;&nbsp; 标签2 &nbsp;&nbsp; 标签3</sub></p>
+
+<p><strong>中文</strong> &nbsp;/&nbsp; <a href="README_en.md">English</a></p>
+
+</div>
+```
+
+**英文版（`README_en.md`）：**
+
+```html
+<div align="center">
+
+<h1>DisplayName</h1>
+
+<p><strong>Plugin description</strong></p>
+
+<p><sub>tag1 &nbsp;&nbsp; tag2 &nbsp;&nbsp; tag3</sub></p>
+
+<p><a href="README.md">中文</a> &nbsp;/&nbsp; <strong>English</strong></p>
+
+</div>
+```
+
+命名规则：
+- **DisplayName**：取插件名 `astrbot_plugin_xxx` 中的 `xxx` 部分，每个单词首字母大写。例如 `astrbot_plugin_reread` → `Reread`；`astrbot_plugin_msg_forward_cc` → `Msg Forward Cc`。
+- **desc**：取自 `metadata.yaml` 的 `desc` 字段，中文版用中文描述，英文版用英文。
+- **标签（tags）**：插件的关键词标签，用 `&nbsp;&nbsp;` 分隔，如 `记忆 &nbsp;&nbsp; 检索 &nbsp;&nbsp; RAG`。
+
+#### 7.2.2 README 四大结构
+
+README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题层级，可灵活组合：
+
+| 板块 | 内容 | 说明 |
+|------|------|------|
+| **一、功能/介绍** | 功能介绍、特性列表、设计理念、截图/演示 | 板块 1 和 2 建议放在一起展示（如用 `## 功能与指令` 合并），但非强制 |
+| **二、指令** | 命令表格（命令、权限、说明）、使用示例 | 同上，可合并也可独立 |
+| **三、配置** | 配置项表格（配置项、类型、默认值、说明）、`_conf_schema.json` 说明 | 独立板块 |
+| **四、其它** | 安装、快速开始、依赖、技术栈、贡献指南、常见问题、许可证、鸣谢等 | 剩余所有内容放这里 |
+
+注意点：
+- 板块 1 和 2 可用一个合并标题（如 `## 功能与指令`）展示，但内容上必须同时包含功能和指令两部分，不能只写其一。
+- 板块 4 是兜底区域，不强制子标题顺序，但**安装/快速开始**建议放在最前。
+- 更新后通读一遍 README，确保与新行为一致（示例：默认值、超时说明、数据目录等）。
+
+#### 7.2.3 何时必须更新 README
+
+| 改动类型 | 必须更新的板块 |
+|----------|--------------|
+| 功能新增/删除 | 一、功能/介绍 |
+| 使用方式/命令变化 | 二、指令 |
+| 配置项变化 | 三、配置 |
+| 依赖/版本要求变化 | 四、其它（安装/依赖部分） |
+| 已知问题/行为变化 | 四、其它（常见问题部分） |
 
 **何时不需要更新 README：**
 - 纯内部重构（行为完全不变）、样式调整、bug 修复（除非修复改变了用户可见行为）
 
-> 更新后通读一遍 README，确保与新行为一致（示例：默认值、超时说明、数据目录等）。
+#### 7.2.4 双语文档同步
+
+- 中文版用 `README.md`，英文版用 `README_en.md`。
+- 章节结构必须保持一致，新增章节两个文件都要加。
+- 中文版使用自然中文，英文版使用地道英文，**禁止**逐字机翻、禁止留下半翻译的句子。
+- 头部的语言切换链接互相指向对方文件。
+- 修改时逐条 diff，确保无内容遗漏或错位。
 
 ### 7.3 注释规范
 
