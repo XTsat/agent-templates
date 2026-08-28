@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "fields": [
+    {
+      "key": "timeout",
+      "type": "int",
+      "hint": "超时时间（秒）",
+      "default": 30
+    },
+    {
+      "key": "max_retries",
+      "type": "int",
+      "hint": "最大重试次数",
+      "default": 3
+    }
+  ]
+}

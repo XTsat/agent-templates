@@ -1,0 +1,29 @@
+# {{ project_name }}
+
+> {{ description }}
+
+## Features
+
+- Feature 1: description
+
+## Screenshots
+
+<!-- TODO: Add screenshots -->
+
+## Quick Start
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+
+## License
+
+MIT

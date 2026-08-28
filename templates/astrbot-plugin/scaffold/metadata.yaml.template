@@ -1,0 +1,10 @@
+name: {{ plugin_name }}
+version: {{ version }}
+author: {{ author }}
+desc: {{ description }}
+repo: https://github.com/XTsat/{{ plugin_name }}
+platform:
+  - aiocqhttp
+  - wechatpadpro
+  - telegram
+  - discord

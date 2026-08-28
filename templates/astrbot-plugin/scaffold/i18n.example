@@ -1,0 +1,17 @@
+# {{ plugin_name }} 插件页面国际化
+
+## zh-CN.json
+
+{
+  "pluginName": "{{ plugin_name }}",
+  "pageTitle": "页面标题",
+  "pageDescription": "页面描述"
+}
+
+## en-US.json
+
+{
+  "pluginName": "{{ plugin_name }}",
+  "pageTitle": "Page Title",
+  "pageDescription": "Page description"
+}
