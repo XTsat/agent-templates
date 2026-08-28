@@ -314,9 +314,10 @@ async def on_message(self, event: AstrMessageEvent):
 ```
 
 命名规则：
-- **DisplayName**：取插件名 `astrbot_plugin_xxx` 中的 `xxx` 部分，每个单词首字母大写。例如 `astrbot_plugin_reread` → `Reread`；`astrbot_plugin_msg_forward_cc` → `Msg Forward Cc`。
-- **desc**：取自 `metadata.yaml` 的 `desc` 字段，中文版用中文描述，英文版用英文。
-- **标签（tags）**：插件的关键词标签，用 `&nbsp;&nbsp;` 分隔，如 `记忆 &nbsp;&nbsp; 检索 &nbsp;&nbsp; RAG`。
+- **中文版 h1**：直接取 `metadata.yaml` 的 `display_name` 字段（如 `模型状态检测`、`跨平台消息转发`）。
+- **英文版 h1**：取插件名 `astrbot_plugin_xxx` 中的 `xxx` 部分，拆分为单词后每个首字母大写。例如 `astrbot_plugin_reread` → `Reread`；`astrbot_plugin_model_status` → `Model Status`；`astrbot_plugin_help_panel_typst` → `Help Panel Typst`。
+- **desc**：中文版用 `metadata.yaml` 的 `desc` 字段；英文版做地道翻译。
+- **标签（tags）**：取自 `metadata.yaml` 的 `tags` 字段（若有），用 `&nbsp;&nbsp;` 分隔。中文版用中文标签，英文版用英文标签。
 
 #### 7.2.2 README 四大结构
 

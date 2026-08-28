@@ -2,6 +2,9 @@
 
 <h1>DisplayName</h1>
 
+<!-- 中文版 h1 = metadata.yaml 的 display_name 字段 -->
+<!-- 英文版 h1 = astrobot_plugin_xxx 的 xxx 部分拆分后首字母大写，如 reread → Reread -->
+
 <p><strong>插件描述（desc）</strong></p>
 
 <p><sub>标签1 &nbsp;&nbsp; 标签2 &nbsp;&nbsp; 标签3</sub></p>

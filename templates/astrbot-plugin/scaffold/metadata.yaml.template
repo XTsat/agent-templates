@@ -1,8 +1,12 @@
 name: {{ plugin_name }}
+display_name: {{ display_name }}
+desc: {{ description }}
 version: {{ version }}
 author: {{ author }}
-desc: {{ description }}
 repo: https://github.com/XTsat/{{ plugin_name }}
+tags:
+  - 标签1
+  - 标签2
 platform:
   - aiocqhttp
   - wechatpadpro
