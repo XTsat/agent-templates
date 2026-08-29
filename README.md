@@ -3,17 +3,17 @@
 > 一套**可直接被 AI 编码代理（agent）自动读取并遵循**的项目规范模板仓库。
 > 每个模板目录都是**自包含**的：agent 只需读取对应模板的 `AGENTS.md`，即可一次性学会该类项目的全部约定（架构、代码规范、文档维护、提交流程）。
 
-本仓库是 XTsat 所有开源项目的**规范收敛中心**，用于消除各仓库之间 AGENTS.md 的碎片化与不一致。
+本仓库是**个人开源项目规范收敛中心**，用于消除各项目之间 AGENTS.md 的碎片化与不一致。
 
 ---
 
 ## 为什么需要这个仓库
 
-XTsat 名下有多类项目，各自有独立的 AGENTS.md 规范，但存在不一致：
+有多类项目，各自有独立的 AGENTS.md 规范，但存在规范不一致：
 
 | 项目类型 | 代表仓库 | 现状 |
 |---|---|---|
-| AstrBot 插件（Python） | `astrbot_plugin_*`（7 个） | 部分有 AGENTS.md，但 CHANGELOG/README 格式不统一 |
+| AstrBot 插件（Python） | `astrbot_plugin_*` | 部分有 AGENTS.md，但 CHANGELOG/README 格式不统一 |
 | Web 应用（TypeScript/Next.js） | `LM-Speed-X` | 有完整 AGENTS.md（i18n 双语、changelog 三件套） |
 
 本仓库把每类项目的规范**收敛成一份权威模板**，新项目直接引用对应模板即可，老项目逐步对齐。
@@ -39,7 +39,7 @@ XTsat 名下有多类项目，各自有独立的 AGENTS.md 规范，但存在不
 ```markdown
 # AGENTS.md
 
-> 本项目遵循 XTsat 的 AstrBot 插件规范模板。
+> 本项目遵循 agent-templates 插件规范模板。
 > 请先阅读并遵守：https://github.com/XTsat/agent-templates/blob/main/templates/astrbot-plugin/AGENTS.md
 > 然后按 `scaffold/` 目录下的骨架文件初始化本项目。
 ```
@@ -88,7 +88,3 @@ agent-templates/
 ## 维护本仓库
 
 修改本仓库时，请遵循根目录的 [`AGENTS.md`](AGENTS.md)。
-
-## License
-
-MIT
