@@ -92,8 +92,10 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 
 ```python
 import ...
+from collections.abc import AsyncGenerator
+
 from astrbot.api.star import register, Star
-from astrbot.api.event import filter, AstrMessageEvent
+from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api import Context, AstrBotConfig, logger
 
 PLUGIN_NAME = "astrbot_plugin_xxx"
@@ -101,18 +103,20 @@ DEFAULT_TIMEOUT = 30
 
 @register(PLUGIN_NAME, "作者名", "插件描述", "v0.1.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context, config: AstrBotConfig):
+    def __init__(self, context: Context, config: AstrBotConfig) -> None:
         super().__init__(context)
         self.config = config
         # 初始化其它资源
 
     @filter.command_group("xxx")
-    def xxx_group(self):
+    def xxx_group(self) -> None:
         pass
 
     @xxx_group.command("help")
     @filter.permission_type(filter.PermissionType.ADMIN)
-    async def cmd_help(self, event: AstrMessageEvent):
+    async def cmd_help(
+        self, event: AstrMessageEvent
+    ) -> AsyncGenerator[MessageEventResult, None]:
         yield event.plain_result("帮助信息")
 ```
 
@@ -130,7 +134,7 @@ class MyPlugin(Star):
 ### 4.3 类型与语法
 
 - Python 3.10+ 现代联合类型写法（`dict \| None`、`list[dict]`、`tuple[str, str]`）
-- 函数签名**必须完整类型注解**（参数 + 返回类型）
+- 函数签名**必须完整类型注解**（参数 + 返回类型）；用 `yield` 返回结果的命令/事件处理方法标注为 `AsyncGenerator[MessageEventResult, None]`
 - 禁止 `Any` 作为类型注解（除非调用方签名强制要求）
 - 禁止 `# type: ignore`（无理由的类型作弊）
 
@@ -200,12 +204,14 @@ settings = {k: self.config.get(k, v) for k, v in DEFAULT_SETTINGS.items()}
 
 ```python
 @filter.command_group("pfx")           # 指令前缀 /pfx
-def pfx_group(self):
+def pfx_group(self) -> None:
     pass
 
 @pfx_group.command("sub")              # 子命令 /pfx sub
 @filter.permission_type(filter.PermissionType.ADMIN)
-async def cmd_sub(self, event: AstrMessageEvent):
+async def cmd_sub(
+    self, event: AstrMessageEvent
+) -> AsyncGenerator[MessageEventResult, None]:
     yield event.plain_result("结果")
 ```
 
@@ -213,8 +219,10 @@ async def cmd_sub(self, event: AstrMessageEvent):
 
 ```python
 @filter.event_message_type(filter.EventMessageType.ALL)
-async def on_message(self, event: AstrMessageEvent):
-    # 处理全部消息
+async def on_message(
+    self, event: AstrMessageEvent
+) -> AsyncGenerator[MessageEventResult, None]:
+    # 处理全部消息（若不 yield，则标注 -> None）
     pass
 ```
 
@@ -302,7 +310,9 @@ async def on_message(self, event: AstrMessageEvent):
 ```html
 <div align="center">
 
-<h1>DisplayName</h1>
+<h1>Plugin Name</h1>
+
+<!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
 
 <p><strong>Plugin description</strong></p>
 

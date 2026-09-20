@@ -1,0 +1,21 @@
+# messages/ 国际化语言文件示例
+
+> 两个语言文件必须成对维护，键名与层级保持一致：新增文案时两份都要加。
+
+## messages/zh-CN.json
+
+{
+  "HomePage": {
+    "title": "{{ project_name }}",
+    "subtitle": "{{ description }}"
+  }
+}
+
+## messages/en.json
+
+{
+  "HomePage": {
+    "title": "{{ project_name }}",
+    "subtitle": "{{ description_en }}"
+  }
+}

@@ -80,7 +80,7 @@ agent-templates/
         └── scaffold/            #   项目骨架文件
             ├── CHANGELOG.md.template
             ├── README.md.template
-            └── messages.example.json  # i18n 语言文件示例
+            └── i18n.example             # i18n 语言文件示例（zh-CN / en 成对）
 ```
 
 ---
