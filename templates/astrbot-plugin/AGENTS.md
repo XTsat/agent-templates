@@ -79,7 +79,7 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 ## 3. 技术栈与依赖
 
 - **Python 3.10+**（AstrBot 4.x 最低要求）
-- **AstrBot API**：`astrbot.api.star`、`astrbot.api.event`（filter, AstrMessageEvent）、`astrbot.api`（Context, Star, logger, AstrBotConfig）
+- **AstrBot API**：`astrbot.api.star`（Context, Star, register, StarTools）、`astrbot.api.event`（filter, AstrMessageEvent）、`astrbot.api`（logger, AstrBotConfig）
 - **依赖管理**：`requirements.txt` 中声明，复杂依赖优先 **惰性 import**（在方法内 import，避免启动时强制加载）
 - **禁止引入**：不引入与原功能无关的依赖；非必要不新增 `requirements.txt` 声明
 - AstrBot 运行时已自带的依赖（如 `aiohttp`、`certifi`）可在惰性 import 中引用，import 失败时优雅降级
@@ -94,9 +94,9 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 import ...
 from collections.abc import AsyncGenerator
 
-from astrbot.api.star import register, Star
+from astrbot.api.star import register, Star, Context
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
-from astrbot.api import Context, AstrBotConfig, logger
+from astrbot.api import AstrBotConfig, logger
 
 PLUGIN_NAME = "astrbot_plugin_xxx"
 DEFAULT_TIMEOUT = 30
