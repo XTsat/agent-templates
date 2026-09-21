@@ -1,0 +1,43 @@
+<div align="center">
+<h1>Plugin Name</h1>
+<!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
+<p><strong>Plugin description</strong></p>
+<p><sub>tag1 &nbsp;&nbsp; tag2 &nbsp;&nbsp; tag3</sub></p>
+<p><a href="README.md">中文</a> &nbsp;/&nbsp; <strong>English</strong></p>
+</div>
+
+## Features & Commands
+
+### Features
+
+- Feature 1: description
+- Feature 2: description
+
+### Commands
+
+| Command | Permission | Description |
+|---------|------------|-------------|
+| `/{prefix} help` | Everyone | Show help |
+| `/{prefix} sub` | Admin | Sub-feature description |
+
+## Configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `timeout` | int | 30 | Timeout in seconds |
+| `max_retries` | int | 3 | Max retry count |
+
+## Misc
+
+### Installation
+
+Clone this repository into AstrBot's `addons/` directory and restart AstrBot.
+
+### Dependencies
+
+- Python 3.10+
+- AstrBot >= 4.x
+
+### License
+
+AGPL-3.0

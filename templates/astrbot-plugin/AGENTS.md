@@ -287,21 +287,16 @@ async def on_message(
 
 #### 7.2.1 头部的表头格式
 
-每个插件维护 **两个** README（中文 `README.md` + 英文 `README_en.md`），任何修改必须两文件同步。表头格式如下：
+每个插件维护 **两个** README（中文 `README.md` + 英文 `README_en.md`），**中文版为权威版本（源）**，任何修改先落中文版、再同步到英文版（方向规则见 7.2.4）。表头格式如下（**元素间不留空行**）：
 
 **中文版（`README.md`）：**
 
 ```html
 <div align="center">
-
 <h1>DisplayName</h1>
-
 <p><strong>插件描述（desc）</strong></p>
-
 <p><sub>标签1 &nbsp;&nbsp; 标签2 &nbsp;&nbsp; 标签3</sub></p>
-
 <p><strong>中文</strong> &nbsp;/&nbsp; <a href="README_en.md">English</a></p>
-
 </div>
 ```
 
@@ -309,17 +304,11 @@ async def on_message(
 
 ```html
 <div align="center">
-
 <h1>Plugin Name</h1>
-
 <!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
-
 <p><strong>Plugin description</strong></p>
-
 <p><sub>tag1 &nbsp;&nbsp; tag2 &nbsp;&nbsp; tag3</sub></p>
-
 <p><a href="README.md">中文</a> &nbsp;/&nbsp; <strong>English</strong></p>
-
 </div>
 ```
 
@@ -360,10 +349,16 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 #### 7.2.4 双语文档同步
 
 - 中文版用 `README.md`，英文版用 `README_en.md`。
+- **中文为主（单向同步）**：中文版是**权威版本（源）**，英文版跟随中文版。所有改动**先落中文版，再从中文同步到英文版**；**禁止反向**——不得先改英文版再回填中文，不得用英文版覆盖中文版。
 - 章节结构必须保持一致，新增章节两个文件都要加。
 - 中文版使用自然中文，英文版使用地道英文，**禁止**逐字机翻、禁止留下半翻译的句子。
 - 头部的语言切换链接互相指向对方文件。
 - 修改时逐条 diff，确保无内容遗漏或错位。
+
+#### 7.2.5 格式与多会话约束
+
+- **禁止无意义的换行**：HTML 头部区块内元素间不留空行；正文长句不要人为软换行（一段文字保持一行，由 Markdown 自动折行显示）；空行只用于分隔标题、表格、列表、代码块等结构性区块。
+- **多会话并行修改**：更新 `README.md` / `README_en.md` 前必须先读取当前文件内容，识别并保留其他会话已写入的既有内容，只追加/修改自己的部分，**严禁整文件覆盖或删除他人记录**。
 
 ### 7.3 注释规范
 

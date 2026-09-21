@@ -73,6 +73,7 @@ agent-templates/
     │       ├── _conf_schema.json.template
     │       ├── CHANGELOG.md.template
     │       ├── README.md.template
+    │       ├── README_en.md.template
     │       ├── requirements.txt.template
     │       └── i18n.example      # .astrbot-plugin/i18n 国际化示例
     └── nextjs-webapp/           # Web 应用（Next.js + TS + Tailwind）
