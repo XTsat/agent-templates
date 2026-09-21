@@ -179,6 +179,7 @@ class MyPlugin(Star):
 ### 5.1 配置 Schema（_conf_schema.json）
 
 - 新增配置项 → 先在 `_conf_schema.json` 补 schema（type/hint/default/options），再在代码中实现读写
+- 配置项在文档（README 配置表、CHANGELOG）中引用时，**中文名在前、英文 key 在后**：统一写成「中文名（`key`）」形式，例如「超时时间（`timeout`）」「转发图片到游戏内（`forward_image_to_mc`）」；中文名取自 `_conf_schema.json` 的 `hint` 字段，`key` 用反引号包裹。
 - 配置持久化：`self.config["rules"]` 读写 → `self.config.save_config()` 保存
 - 数据文件存于 `astrbot/data/plugin_data/<插件名>/`（通过 `StarTools.get_data_dir("插件名")` 获取路径）
 - 写操作持 `asyncio.Lock`，读写用 `encoding="utf-8"` + `ensure_ascii=False`
