@@ -35,6 +35,10 @@ templates/
 3. 在根 `README.md` 的「模板选择指南」表中登记一行。
 4. 本文件第 4 节的「模板编写规范」适用于所有模板。
 
+### 2.1 skills 目录
+
+`skills/` 存放可被 agent 运行时加载的 skill（每个子目录含一份 `SKILL.md`，与运行环境 `dsh-data/skills/` 保持同步）。**skill 仅在用户主动点名/主动提出对应任务时才加载使用，不得在普通流程中自动触发。** 新增 skill 时同步在根 `README.md` 登记。
+
 ---
 
 ## 3. 每位模板的 `AGENTS.md` 必须包含的章节

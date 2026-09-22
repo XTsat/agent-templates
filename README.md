@@ -82,7 +82,20 @@ agent-templates/
             ├── CHANGELOG.md.template
             ├── README.md.template
             └── i18n.example             # i18n 语言文件示例（zh-CN / en 成对）
+├── skills/
+│   └── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（SKILL.md，仅用户主动提出时使用）
+│       └── SKILL.md
 ```
+
+---
+
+## Skills
+
+| Skill | 用途 | 触发方式 |
+|---|---|---|
+| [`astrbot-plugin-hot-reloading`](skills/astrbot-plugin-hot-reloading/SKILL.md) | 热重载 AstrBot 插件（同步源码 + 插件级重载） | **仅用户主动提出时使用**（如「热重载插件」），不自动触发 |
+
+`skills/` 下的 `SKILL.md` 与运行环境 `dsh-data/skills/` 保持同步。
 
 ---
 
