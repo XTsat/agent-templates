@@ -138,16 +138,22 @@ project-root/
 
 ## [Unreleased]
 
+> 一句话总结这个版本（可选）
+
 - 新增：功能 A
 - 修复：问题 B
 - 变更：行为 C
 
 ## v0.3.0 (2026-07-06)
 
+> 一句话总结这个版本（可选）
+
 - 新增：功能 D
 ```
 
 前缀分类：`新增` / `修复` / `变更` / `移除` / `性能`
+
+**版本总结**：版本标题（`## [Unreleased]` / `## vX.Y.Z (YYYY-MM-DD)`）与条目列表之间，可加一行 `> 引用` 形式的一句话总结（概括该版本/该批改动的主旨），可选，不强制。
 
 > 若 changelog 是在页面中渲染的（如 `src/app/[locale]/changelog/page.tsx`），则 changelog 变更需要 **三处同步**：页面 `entries` 数组最上方新增记录 + `messages/zh-CN.json` 新增文案键 + `messages/en.json` 新增同键名英文条目。
 

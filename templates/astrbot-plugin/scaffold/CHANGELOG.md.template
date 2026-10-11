@@ -2,5 +2,7 @@
 
 ## [Unreleased]
 
+> {{ 一句话总结这个版本（可选） }}
+
 ### 新增
 - **项目初始化**：基于 AstrBot 框架的 {{ description }}
