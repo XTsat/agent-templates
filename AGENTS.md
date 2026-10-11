@@ -29,6 +29,8 @@ templates/
         └── README.md.template
 ```
 
+> 通用兜底：不适用专用模板的项目类型（Python/Go/Rust 库、CLI、脚本、文档站等）使用 `templates/generic/`，判定顺序为 `astrbot-plugin` → `nextjs-webapp` → `generic`。
+
 新增模板类型时：
 1. 在 `templates/<类型>/` 下写一份自包含的 `AGENTS.md`。
 2. 在 `templates/<类型>/scaffold/` 下放骨架文件（后缀固定 `.template`）。
@@ -86,7 +88,7 @@ templates/
 
 ## 6. 提交约定
 
-- 本仓库的提交信息用中文短句式，遵循现有仓库风格。
+- 本仓库的提交信息遵循 **Conventional Commits**：`<type>(<scope>): <中文短句式 subject>`（如 `feat: 新增通用模板`、`docs: 更新模板选择指南`）。
 - **提交前必须先向用户展示改动内容和提交标题**，等用户确认后再执行 commit
 - 任何改动（新增模板、修改规范）**必须同步更新**根 `README.md` 的「模板选择指南」表。
 - 添加或修改绑定模板前，先完整读取既有模板，保持格式与风格一致。

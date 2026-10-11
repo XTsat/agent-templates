@@ -15,6 +15,7 @@
 |---|---|---|
 | AstrBot 插件（Python） | `astrbot_plugin_*` | 部分有 AGENTS.md，但 CHANGELOG/README 格式不统一 |
 | Web 应用（TypeScript/Next.js） | `LM-Speed-X` | 有完整 AGENTS.md（i18n 双语、changelog 三件套） |
+| 其它类型（库 / CLI / 脚本 / 文档站） | — | 无规范，使用 `generic` 通用模板兜底 |
 
 本仓库把每类项目的规范**收敛成一份权威模板**，新项目直接引用对应模板即可，老项目逐步对齐。
 
@@ -26,7 +27,9 @@
 |---|---|---|
 | AstrBot 插件（Python，`astrbot_plugin_*`） | [`templates/astrbot-plugin/`](templates/astrbot-plugin/) | 覆盖 Star 插件、命令组、配置 schema、CHANGELOG/README 维护 |
 | Web 应用（Next.js + TypeScript + Tailwind） | [`templates/nextjs-webapp/`](templates/nextjs-webapp/) | 覆盖 i18n 双语、shadcn/ui、changelog 三件套、README 双语 |
-| 其它（通用 Python 库 / 脚本 / 文档站） | 暂未提供 | 可参考 `astrbot-plugin` 的通用部分（CHANGELOG/README 约定） |
+| 其它类型（Python/Go/Rust 库、CLI、脚本、文档站等） | [`templates/generic/`](templates/generic/) | 通用兜底模板：技术栈占位由 agent 进入项目后回填，覆盖目录结构、代码规范、CHANGELOG/README、Conventional Commits |
+
+> 判定顺序：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；Next.js + TypeScript → 用 `nextjs-webapp`；其余类型一律用 `generic`。
 
 ---
 
@@ -39,8 +42,9 @@
 ```markdown
 # AGENTS.md
 
-> 本项目遵循 agent-templates 插件规范模板。
-> 请先阅读并遵守：https://github.com/XTsat/agent-templates/blob/main/templates/astrbot-plugin/AGENTS.md
+> 本项目遵循 agent-templates 模板规范。
+> 请先阅读并遵守：https://github.com/XTsat/agent-templates/blob/main/templates/<对应模板>/AGENTS.md
+> （判定顺序：astrbot-plugin → nextjs-webapp → generic）
 > 然后按 `scaffold/` 目录下的骨架文件初始化本项目。
 ```
 
@@ -82,6 +86,11 @@ agent-templates/
             ├── CHANGELOG.md.template
             ├── README.md.template
             └── i18n.example             # i18n 语言文件示例（zh-CN / en 成对）
+    └── generic/                 # 通用兜底模板（库 / CLI / 脚本 / 文档站等）
+        ├── AGENTS.md            #   完整规范（agent 必读）
+        └── scaffold/            #   项目骨架文件
+            ├── CHANGELOG.md.template
+            └── README.md.template
 ├── skills/
 │   ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（SKILL.md，仅用户主动提出时使用）
 │   │   └── SKILL.md
