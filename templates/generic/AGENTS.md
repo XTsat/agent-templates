@@ -6,6 +6,9 @@
 > 适用项目：未命中 `astrbot-plugin`（AstrBot 插件）与 `nextjs-webapp`（Next.js Web 应用）专用模板的其它类型项目，例如通用 Python / Go / Rust 库、CLI 工具、脚本仓库、文档站、无框架前端、服务端 API 等。
 >
 > 本文档中所有 `{{ 占位 }}` 形式的内容，由 **agent 进入项目后第一件事填写**（读出项目实际技术栈，回填到本文档，替换占位标记）。
+>
+> **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/generic/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
+> 用户说「更新 AGENTS」时按此流程：① 拉取来源模板最新版 → ② 与本地逐节比对 → ③ 合并（保留本项目已回填的技术栈、目录结构与项目特有约定，**禁止把已填内容改回 `{{ 占位 }}`**）→ ④ 展示 diff 与改动清单，等用户确认后再落盘。**禁止整文件覆盖**。
 
 ---
 
