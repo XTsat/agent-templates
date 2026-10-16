@@ -25,9 +25,9 @@
 
 | 你的新项目是… | 使用模板 | 说明 |
 |---|---|---|
-| AstrBot 插件（Python，`astrbot_plugin_*`） | [`templates/astrbot-plugin/`](templates/astrbot-plugin/) | 覆盖 Star 插件、命令组、配置 schema、CHANGELOG/README 维护 |
-| Web 应用（Next.js + TypeScript + Tailwind） | [`templates/nextjs-webapp/`](templates/nextjs-webapp/) | 覆盖 i18n 双语、shadcn/ui、changelog 三件套、README 双语 |
-| 其它类型（Python/Go/Rust 库、CLI、脚本、文档站等） | [`templates/generic/`](templates/generic/) | 通用兜底模板：技术栈占位由 agent 进入项目后回填，覆盖目录结构、代码规范、CHANGELOG/README、Conventional Commits |
+| AstrBot 插件（Python，`astrbot_plugin_*`） | [`templates/astrbot-plugin/`](templates/astrbot-plugin/) | 覆盖 Star 插件、命令组、配置 schema、CHANGELOG/README（面向用户）维护 |
+| Web 应用（Next.js + TypeScript + Tailwind） | [`templates/nextjs-webapp/`](templates/nextjs-webapp/) | 覆盖 i18n 双语、shadcn/ui、changelog/README（面向用户）、双语维护 |
+| 其它类型（Python/Go/Rust 库、CLI、脚本、文档站等） | [`templates/generic/`](templates/generic/) | 通用兜底模板：技术栈占位由 agent 进入项目后回填，覆盖目录结构、代码规范、CHANGELOG/README（面向用户）、Conventional Commits |
 
 > 判定顺序：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；Next.js + TypeScript → 用 `nextjs-webapp`；其余类型一律用 `generic`。
 
