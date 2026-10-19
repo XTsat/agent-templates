@@ -123,6 +123,8 @@ class MyPlugin(Star):
         yield event.plain_result("帮助信息")
 ```
 
+> `@register` 的最后一个参数只是注册信息，**不是版本源**。插件版本以 `metadata.yaml` 的 `version` 为准（见 7.1 版本号）；日常改动不递增；准备发布时改这一处，并按 7.1 把 `@register`、README 徽章等辅助位置同步到同一版本号。
+
 ### 4.2 命名约定
 
 | 元素 | 约定 |
@@ -306,17 +308,17 @@ CHANGELOG 的读者是**插件使用者**（服务器管理员、群成员），
 - ❌ 修复 `as_completed` 回调未捕获 `asyncio.TimeoutError` 导致的 `finally` 泄漏
 ```
 
-#### 版本号联动
+#### 版本号（准备发布时才确认）
 
-涉及功能新增/删除、行为变化、配置项变化时，**三处同步递增**：
+- **日常开发不碰版本号**：只往 `[Unreleased]` 追加条目，`metadata.yaml` 的 `version` 保持原值；每个功能、每个修复各自是一次独立提交，提交里不带版本号变更，也不改辅助位置的版本字样。
+- **准备发布时才确认并递增一次**：一次发版汇总了多个独立的功能/修复提交，等合并到指定版本、把 `[Unreleased]` 内容移入 `## vX.Y.Z (YYYY-MM-DD)` 的同一次操作里，才确认版本号（SemVer 见 8.2）、写进下方的**唯一版本源文件**、把辅助位置同步成同一个版本号并打 `git tag vX.Y.Z`。**不能每改一点就递增**——否则版本号会随提交次数突进，与实际发布节奏脱节。
+- **唯一版本源**：`metadata.yaml` 的 `version` 字段（`vX.Y.Z` 格式，AstrBot 读取的插件版本）。需要「插件版本」时一律以它为准。
 
-| 文件 | 位置 |
+| 版本源文件 | 位置 |
 |------|------|
 | `metadata.yaml` | `version` 字段（`vX.Y.Z` 格式） |
-| `CHANGELOG.md` | 发版时从 `[Unreleased]` 移入 `## vX.Y.Z (YYYY-MM-DD)` |
-| `README.md` | 版本徽章（如有） |
 
-纯修复/内部重构可只更新 `[Unreleased]` 条目，不递增版本号。
+下列位置属于**辅助信息，不是版本源**，不决定版本号（需要「插件版本」时以 `metadata.yaml` 为准）：`main.py` 中 `@register` 传入的版本号、`README.md` / `README_en.md` 的版本徽章与正文版本字样、`.astrbot-plugin/i18n` 中的版本文案。**日常提交不动它们；准备发布时必须逐个同步到同一个新版本号**，不得残留旧版本号或自相矛盾的版本字样。也不要新增此类重复版本号——需要展示版本时从 `metadata.yaml` 读取，不手写。
 
 #### 多会话并行开发
 
@@ -454,8 +456,8 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 ### 8.2 版本号规范
 
 - 采用 **SemVer**：新功能 → `minor` 递增；bug 修复/小改进 → `patch` 递增
-- `metadata.yaml` version 与 `CHANGELOG.md` 最新版本必须一致
-- 发版时打 `git tag vX.Y.Z`，tag 推送同样需用户确认
+- **只在准备发布时递增**（规则见 7.1）：单个功能/修复提交不碰版本号；一次发版汇总多个独立提交、合并到指定版本时才确认版本号，改 `metadata.yaml` 的 `version`，并把 `@register`、README 徽章、i18n 等辅助位置同步到同一版本号——逐次递增会让版本号突进
+- 发版一致性：`metadata.yaml` version = CHANGELOG 新版本段号 = `git tag vX.Y.Z`，tag 推送同样需用户确认
 
 ### 8.3 测试与验证
 
@@ -472,7 +474,7 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 - [ ] 日志：`[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
 - [ ] CHANGELOG：`[Unreleased]` 已追加条目，条目面向用户（无内部实现细节），保留了他人的既有记录
 - [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
-- [ ] 版本号：`metadata.yaml` 与 `CHANGELOG` 最新版本一致
+- [ ] 版本号：日常任务不递增版本号；仅发版任务改 `metadata.yaml` 的 `version`（与 CHANGELOG 新版本段、tag 一致），并把 `@register`、README 徽章、i18n 等辅助位置同步到同一版本号
 - [ ] 配置：新增配置项已在 `_conf_schema.json` 和代码中同步
 - [ ] 提交信息：Conventional Commits 格式（`type: 中文短句式`）
 - [ ] 提交/推送：已取得用户对本次改动的明确确认（一次性授权，未沿用上一轮）

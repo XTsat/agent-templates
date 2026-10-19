@@ -15,6 +15,7 @@ PLUGIN_NAME = "{{ plugin_name }}"
 DEFAULT_TIMEOUT = 30
 
 
+# 版本源为 metadata.yaml 的 version 字段；下面 @register 的版本号只是注册信息，不属于版本源
 @register(PLUGIN_NAME, "{{ author }}", "{{ description }}", "{{ version }}")
 class {{ class_name }}(Star):
     def __init__(self, context: Context, config: AstrBotConfig) -> None:

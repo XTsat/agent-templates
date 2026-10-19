@@ -30,6 +30,7 @@
 | 其它类型（Python/Go/Rust 库、CLI、脚本、文档站等） | [`templates/generic/`](templates/generic/) | 通用兜底模板：技术栈占位由 agent 进入项目后回填，覆盖目录结构、代码规范、CHANGELOG/README（面向用户）、Conventional Commits |
 
 > 判定顺序：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；Next.js + TypeScript → 用 `nextjs-webapp`；其余类型一律用 `generic`。
+> 版本号约定（全模板统一）：**只在准备发布时递增**——日常每个功能/修复各自独立提交、不带版本号变更，一次发版汇总多个提交后合并到指定版本时才确认版本号，避免版本号随提交次数突进。发版时先改**唯一版本源文件**（`astrbot-plugin` → `metadata.yaml`；`nextjs-webapp` → `package.json`；`generic` → `{{ 版本号文件 }}`），再把 README 徽章、正文版本字样、i18n 文案等**辅助位置同步到同一个版本号**（辅助位置不决定版本号，但发版不能落下）。
 
 ---
 
