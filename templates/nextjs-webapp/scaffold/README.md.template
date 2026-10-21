@@ -2,28 +2,43 @@
 
 > {{ description }}
 
-## Features
+## 功能
 
-- Feature 1: description
+- {{ 功能 1 }}：{{ 一句说明 }}
+- {{ 功能 2 }}：{{ 一句说明 }}
 
-## Screenshots
+## 截图
 
-<!-- TODO: Add screenshots -->
+<!-- 有截图时贴在这里；暂无截图就删掉本段 -->
 
-## Quick Start
+## 快速开始
+
+运行环境：Node.js {{ 20+ }}、pnpm。
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-## Tech Stack
+启动后访问 `http://localhost:3000`。
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
+## 环境变量
 
-## License
+| 变量 | 必填 | 默认值 | 说明 |
+|------|------|--------|------|
+| `{{ KEY }}` | {{ 是 / 否 }} | {{ 默认值，无则写 - }} | {{ 说明 }} |
 
-MIT
+{{ 没有环境变量时写「无需额外配置」并删掉表格 }}
+
+## 构建与部署
+
+```bash
+pnpm build
+pnpm start
+```
+
+{{ 可选：部署平台与额外步骤，如 Vercel / Docker }}
+
+## 许可证
+
+{{ 可选：项目有许可证时写在这里（如 MIT）；没有就删掉本节 }}
