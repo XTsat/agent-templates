@@ -31,6 +31,7 @@
 
 > 判定顺序：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；Next.js + TypeScript → 用 `nextjs-webapp`；其余类型一律用 `generic`。
 > 版本号约定（全模板统一）：**只在准备发布时递增**——日常每个功能/修复各自独立提交、不带版本号变更，一次发版汇总多个提交后合并到指定版本时才确认版本号，避免版本号随提交次数突进。发版时先改**唯一版本源文件**（`astrbot-plugin` → `metadata.yaml`；`nextjs-webapp` → `package.json`；`generic` → `{{ 版本号文件 }}`），再把 README 徽章、正文版本字样、i18n 文案等**辅助位置同步到同一个版本号**（辅助位置不决定版本号，但发版不能落下）。
+> 模板版本约定：每个模板另有一个**独立维护的模板版本**，写在该模板 `AGENTS.md` 头部一行（`> **模板版本**：vX.Y.Z（YYYY-MM-DD）`），三个模板各自编号、互不牵扯；改动涉及模板内容时推送前递增，只改本仓库自身文件（根 `README.md` / 根 `AGENTS.md` / `skills/`）不递增。派生项目通过比对自己 `AGENTS.md` 顶部的这一行判断是否需要更新，规则细则见根 [`AGENTS.md`](AGENTS.md) 第 4 节。
 
 ---
 
@@ -71,34 +72,35 @@ agent 打开新项目时，会先读到这份 `AGENTS.md`，再跳转到模板�
 agent-templates/
 ├── README.md                    # 本文件：总索引 + 模板选择指南
 ├── AGENTS.md                    # 本仓库自身的维护规范
-└── templates/
-    ├── astrbot-plugin/          # AstrBot 插件（Python）
-    │   ├── AGENTS.md            #   完整规范（agent 必读）
-    │   └── scaffold/            #   项目骨架文件
-    │       ├── main.py.template
-    │       ├── metadata.yaml.template
-    │       ├── _conf_schema.json.template
-    │       ├── CHANGELOG.md.template
-    │       ├── README.md.template
-    │       ├── README_en.md.template
-    │       ├── requirements.txt.template
-    │       └── i18n.example      # .astrbot-plugin/i18n 国际化示例
-    └── nextjs-webapp/           # Web 应用（Next.js + TS + Tailwind）
-        ├── AGENTS.md            #   完整规范（agent 必读）
-        └── scaffold/            #   项目骨架文件
-            ├── CHANGELOG.md.template
-            ├── README.md.template
-            └── i18n.example             # i18n 语言文件示例（zh-CN / en 成对）
-    └── generic/                 # 通用兜底模板（库 / CLI / 脚本 / 文档站等）
-        ├── AGENTS.md            #   完整规范（agent 必读）
-        └── scaffold/            #   项目骨架文件
-            ├── CHANGELOG.md.template
-            └── README.md.template
-├── skills/
-│   ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（SKILL.md，仅用户主动提出时使用）
-│   │   └── SKILL.md
-│   └── astrbot-plugin-readme-cleaner/ # 精简 AstrBot 插件 README（SKILL.md，仅用户主动提出时使用）
-│       └── SKILL.md
+├── LICENSE
+├── templates/
+│   ├── astrbot-plugin/          # AstrBot 插件（Python）
+│   │   ├── AGENTS.md            #   完整规范（agent 必读）
+│   │   └── scaffold/            #   项目骨架文件
+│   │       ├── main.py.template
+│   │       ├── metadata.yaml.template
+│   │       ├── _conf_schema.json.template
+│   │       ├── CHANGELOG.md.template
+│   │       ├── README.md.template
+│   │       ├── README_en.md.template
+│   │       ├── requirements.txt.template
+│   │       └── i18n.example     #   .astrbot-plugin/i18n 国际化示例
+│   ├── nextjs-webapp/           # Web 应用（Next.js + TS + Tailwind）
+│   │   ├── AGENTS.md            #   完整规范（agent 必读）
+│   │   └── scaffold/            #   项目骨架文件
+│   │       ├── CHANGELOG.md.template
+│   │       ├── README.md.template
+│   │       └── i18n.example     #   i18n 语言文件示例（zh-CN / en 成对）
+│   └── generic/                 # 通用兜底模板（库 / CLI / 脚本 / 文档站等）
+│       ├── AGENTS.md            #   完整规范（agent 必读）
+│       └── scaffold/            #   项目骨架文件
+│           ├── CHANGELOG.md.template
+│           └── README.md.template
+└── skills/
+    ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（SKILL.md，仅用户主动提出时使用）
+    │   └── SKILL.md
+    └── astrbot-plugin-readme-cleaner/ # 精简 AstrBot 插件 README（SKILL.md，仅用户主动提出时使用）
+        └── SKILL.md
 ```
 
 ---
