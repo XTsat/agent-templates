@@ -97,8 +97,9 @@ agent-templates/
 │           ├── CHANGELOG.md.template
 │           └── README.md.template
 └── skills/
-    ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（SKILL.md，仅用户主动提出时使用）
-    │   └── SKILL.md
+    ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（仅用户主动提出时使用）
+    │   ├── SKILL.md               #   说明、通过标准与失败处置
+    │   └── run.sh                 #   一步执行脚本（一次授权跑完同步→重载→验证）
     └── astrbot-plugin-readme-cleaner/ # 精简 AstrBot 插件 README（SKILL.md，仅用户主动提出时使用）
         └── SKILL.md
 ```
@@ -109,7 +110,7 @@ agent-templates/
 
 | Skill | 用途 | 触发方式 |
 |---|---|---|
-| [`astrbot-plugin-hot-reloading`](skills/astrbot-plugin-hot-reloading/SKILL.md) | 热重载 AstrBot 插件（同步源码 + 插件级重载） | **仅用户主动提出时使用**（如「热重载插件」），不自动触发 |
+| [`astrbot-plugin-hot-reloading`](skills/astrbot-plugin-hot-reloading/SKILL.md) | 热重载 AstrBot 插件（同步源码 + 插件级重载，附一步执行脚本 `run.sh`） | **仅用户主动提出时使用**（如「热重载插件」），不自动触发 |
 | [`astrbot-plugin-readme-cleaner`](skills/astrbot-plugin-readme-cleaner/SKILL.md) | 精简 AstrBot 插件 README（删原理、留功能，双语同步） | **仅用户主动提出时使用**（如「精简文档」「README 太复杂」），不自动触发 |
 
 `skills/` 下的 `SKILL.md` 与运行环境 `dsh-data/skills/` 保持同步。
