@@ -37,7 +37,3 @@ Clone this repository into AstrBot's `addons/` directory and restart AstrBot.
 
 - Python 3.10+
 - AstrBot >= 4.x
-
-### License
-
-AGPL-3.0
