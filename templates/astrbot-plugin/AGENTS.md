@@ -5,7 +5,7 @@
 >
 > 适用项目：`astrbot_plugin_*` 命名的 AstrBot 插件（Python）。
 >
-> **模板版本**：v0.1.4（2026-11-03） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
+> **模板版本**：v0.1.5（2026-11-03） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
 > **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/astrbot-plugin/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
 > 用户说「更新 AGENTS」时按此流程：① 打开来源仓库该模板的 `AGENTS.md`，比对头部「模板版本」与本地是否一致——一致说明已是最新，直接结束，不必拉取逐节比对 → ② 不一致才拉取来源模板最新版 → ③ 与本地逐节比对 → ④ 合并（保留本项目已回填的插件名、命令前缀、目录结构与项目特有约定）→ ⑤ 展示 diff 与改动清单，等用户确认后再落盘，并把头部「模板版本」同步改为合并到的版本。**禁止整文件覆盖**。
 
@@ -189,11 +189,13 @@ class MyPlugin(Star):
 - `views/<view_name>/index.html` 是唯一入口，没有 `index.html` 的目录会被忽略；`view_name` 用简单目录名（`panel`、`settings`），不要 `.`、`..`、点开头或含 `/`、`\`。
 - **不需要在 metadata 里声明**：AstrBot 自动扫描 `views/`（旧 `pages/` 目录仅作兼容别名，新项目一律用 `views/`）。新增/删除视图目录后要**重载插件**；只改静态资源刷新视图即可。
 - 前端**零构建**：原生 ES module + 自己的 CSS，不引入打包器、npm 依赖与第三方 UI 框架。
+- **`views/` 与 `pages/` 同时存在时只认 `views/`**：把旧页面从 `pages/` 迁到 `views/` 时整目录搬过去，别两处各留一份（另一份会静默不显示）。
 
 **通信只走 bridge**
 - 页面拿到的是 `window.AstrBotPluginView`（别名 `AstrBotPluginPage`），可用：`ready()`、`getContext()`、`getLocale()`、`getI18n()`、`t(key, fallback)`、`onContext(handler)`、`apiGet(ep, params)`、`apiPost(ep, body)`、`upload(ep, file)`（字段名固定 `file`）、`download(ep, params, filename)`、`subscribeSSE(ep, handlers, params)`、`unsubscribeSSE(id)`。
 - **禁止裸 `fetch` / `new EventSource`**：视图跑在沙箱 iframe 里，拿不到 Dashboard 会话与 token，`EventSource` 也带不了鉴权头（必然 401）。
-- **bridge 何时就绪**：SDK 由 AstrBot 在返回 HTML 时注入，所以脚本要放**外部 `type="module"` 文件**（或先显式 `<script src="/api/plugin/page/bridge-sdk.js"></script>`），别指望内联脚本同步读到 `window.AstrBotPluginView`。
+- **bridge 何时就绪（机制）**：AstrBot 把 SDK 的 `<script>` 注在 `</body>` 之前，也就是**晚于页面里所有内联/同步脚本、早于外部 `type="module"` 脚本**（module 默认 defer）。所以：常规写法用外部 module 脚本；页面首屏就得用 bridge 时，在 `<head>` 里显式写 `<script src="/api/plugin/page/bridge-sdk.js"></script>`（不必自己加 query，服务端会改写）。**别在内联脚本里同步读 `window.AstrBotPluginView`**，那一刻它还不存在。
+- **取不到 bridge 要有兜底**：不要直接 `window.AstrBotPluginView.apiGet(...)`（undefined 会抛裸错）。用 `window.AstrBotPluginView ?? window.AstrBotPluginPage` 取，取不到时：短轮询等一会儿（例如 20 次 × 100ms）或直接抛一句中文提示「请从 AstrBot 插件详情页打开本视图」，让用户知道是入口不对而不是插件坏了。
 - 初始化先 `await bridge.ready()` 再渲染；语言/主题变化用 `onContext()` 重新渲染，并在 `beforeunload` 里取消监听与 `unsubscribeSSE`。
 
 **后端接口**
@@ -202,6 +204,7 @@ class MyPlugin(Star):
 - 视图专用接口直接返回业务 JSON；需要报错用 `error_response(msg, status_code=400)`（bridge 会 reject）。返回 `{status:"ok",data}` 时 bridge 自动解包成 `data`，别依赖这个兼容行为。
 - SSE：后端 `stream_response()`，每帧以 `\n\n` 结尾；视图侧 `subscribeSSE` 接收，超时/断线由 bridge 管理。
 - 后端仍要校验视图传来的路径、文件名、数值范围（视图侧数据一律不可信）；落盘用 `get_astrbot_plugin_data_path()` 下的插件数据目录并重命名文件。
+- **上传大小自己限**：Dashboard 只对自家聊天上传路由限制体积（512MB），插件扩展路由没有统一上限；`upload()` 单文件、字段名固定 `file`，后端要自己按 `upload.content_length` 或 `save_upload_stream(..., max_bytes=...)` 卡一道，再决定报错文案。
 
 **沙箱限制（写页面之前先认清，别事后返工）**
 视图由 Dashboard 以 `<iframe sandbox="allow-scripts allow-forms allow-downloads">` 加载，响应头带 `X-Frame-Options: SAMEORIGIN`、`Content-Security-Policy: object-src 'none'; base-uri 'self'`、`Cache-Control: no-store`、`Referrer-Policy: no-referrer`。由此：
@@ -209,12 +212,12 @@ class MyPlugin(Star):
 - **没有 `allow-same-origin`** → 页面是不透明源：`localStorage` / `sessionStorage` / `indexedDB` / `document.cookie` 一律不可用（直接抛错）。页面状态只能放内存或后端；刷新即丢。
 - **没有 `allow-popups`** → `window.open()`、`<a target="_blank">` 一律被拦。别设计「新标签页打开」：要在别处使用的链接就复制文本、要走下载就用 `bridge.download()`。
 - **不要拿嵌套 `<iframe>` 当主界面**：外层已是受限沙箱，内嵌页面继承同样的限制（无 cookie、无弹窗、无存储），目标站还可能用 `X-Frame-Options: DENY` / `frame-ancestors` 直接拒载；需要外部页面时让用户自己开浏览器，或把那个能力做成插件后端接口。
-- **不能访问父窗口 DOM / Dashboard 存储**；`object-src 'none'` 表示别用 `<object>`/`<embed>`，`base-uri 'self'` 表示别用 `<base>` 指外部。
+- **不能访问父窗口 DOM / Dashboard 存储**（跨源，`window.parent.*` 会直接抛错，父页面只能经 bridge 与你通信）；`object-src 'none'` 表示别用 `<object>`/`<embed>`，`base-uri 'self'` 表示别用 `<base>` 指外部。
 - 页面内容 URL 由 Dashboard 下发（带一次性路径令牌），**不要手动拼内容 URL、不要自己加 `asset_token`、不要用 `..` 跳目录**；SPA 用 hash routing（history routing 刷新时要求该路径真有文件）。
 
 **样式与文案**
 - 颜色/间距走 CSS 变量，`:root` 放亮色、`[data-theme="dark"]` 放暗色（AstrBot 已在 `<html>` 上同步 `data-theme`，服务端预注入避免闪烁）；类名 kebab-case。
-- 视图标题/描述写 `.astrbot-plugin/i18n/<locale>.json` 的 `views.<view_name>.title` / `.description`，页面内文案用 `bridge.t("views.<view_name>.<key>", fallback)`；改 locale 文件后要重载插件。旧的 `pages.*` 键仅兼容。
+- 视图标题/描述写 `.astrbot-plugin/i18n/<locale>.json` 的 `views.<view_name>.title` / `.description`，页面内文案用 `bridge.t("views.<view_name>.<key>", fallback)`；改 locale 文件后要重载插件。旧的 `pages.<view_name>.*` 只是兼容键——迁移期可以两个键都写（老 WebUI 不丢标题），稳定后只留 `views.*`。
 - 插入 DOM 的外部文本必须先转义（页面内自备 `escapeHtml()`），不要把后端字符串直接塞进 `innerHTML`。
 
 **自检**：视图没出现 → 检查 `views/<view>/index.html` 是否存在、插件是否启用、详情页是否刷新；bridge 未定义 → 脚本是否外部 module 且在 SDK 之后；接口 404 → 注册路由是否带插件名前缀、endpoint 是否多写了 `/` 或 query；上传为空 → 字段名必须是 `file`；SSE 401 → 是否绕过了 `bridge.subscribeSSE`。
@@ -593,7 +596,7 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 - [ ] 许可证：未自行创建 `LICENSE`、README 中无许可证小节/徽章/许可证名（用户明确指定许可证时才建 `LICENSE`，仍不写进 README）
 - [ ] 版本号：日常任务不递增版本号；仅发版任务改 `metadata.yaml` 的 `version`（与 CHANGELOG 新版本段、tag 一致），并把 `@register`、README 徽章、i18n 等辅助位置同步到同一版本号
 - [ ] 配置：新增配置项已按扁平 `{key: {...}}` 格式写进 `_conf_schema.json`，并在代码中同步读写
-- [ ] 视图（改动或新增 `views/` 时）：通信只走 bridge（无裸 `fetch`/`EventSource`）、脚本是外部 `type="module"`、没有用 `localStorage` 或 `target="_blank"`、视图标题已进 `.astrbot-plugin/i18n/<locale>.json` 的 `views.<name>`
+- [ ] 视图（改动或新增 `views/` 时）：通信只走 bridge（无裸 `fetch`/`EventSource`）、脚本是外部 `type="module"` 或 head 里显式引入 SDK、拿 bridge 有兜底报错、没有用 `localStorage` 或 `target="_blank"`、上传自己限了大小、视图标题已进 `.astrbot-plugin/i18n/<locale>.json` 的 `views.<name>`
 - [ ] 提交信息：Conventional Commits 格式（`type: 中文短句式`）
 - [ ] 提交前展示：已给出待提交文件清单、`git diff --stat`、2–3 个候选提交标题（逐条注明侧重并标出推荐项），并取得用户对本次改动的明确确认（一次性授权，未沿用上一轮）
 - [ ] 本地测试：`python -c "import main"` 无语法错误（或 ruff 格式通过）

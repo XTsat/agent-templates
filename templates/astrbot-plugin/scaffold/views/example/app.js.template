@@ -1,10 +1,9 @@
 /* ---- bridge ---- */
 
-// 视图永远从 bridge 走：沙箱 iframe 里没有 Dashboard 会话，裸 fetch / EventSource 拿不到鉴权
-const bridge = window.AstrBotPluginView ?? window.AstrBotPluginPage;
-if (!bridge) {
-  throw new Error("bridge 未就绪：请从 AstrBot 插件详情页打开本视图");
-}
+// 视图永远从 bridge 走：沙箱 iframe 里没有 Dashboard 会话，裸 fetch / EventSource 拿不到鉴权。
+// SDK 由 AstrBot 注在 </body> 之前（晚于内联脚本、早于本 module），个别情况下还会晚到一点，所以这里等一下。
+const BRIDGE_WAIT_ATTEMPTS = 20;
+const BRIDGE_WAIT_INTERVAL_MS = 100;
 
 const els = {
   title: document.getElementById("view-title"),
@@ -13,29 +12,48 @@ const els = {
   output: document.getElementById("output"),
 };
 
-/* ---- 渲染 ---- */
-
 function show(value) {
   els.output.textContent =
     typeof value === "string" ? value : JSON.stringify(value, null, 2);
 }
 
-async function render() {
-  const context = await bridge.ready();
-  els.title.textContent = bridge.t("views.example.title", context.displayName || "");
-  els.hint.textContent = bridge.t("views.example.hint", "");
+function currentBridge() {
+  return window.AstrBotPluginView ?? window.AstrBotPluginPage ?? null;
 }
 
-/* ---- 交互 ---- */
-
-els.ping.addEventListener("click", async () => {
-  try {
-    show(await bridge.apiGet("ping", { limit: 20 }));
-  } catch (error) {
-    show(`❌ ${error instanceof Error ? error.message : String(error)}`);
+async function waitForBridge() {
+  for (let attempt = 0; attempt < BRIDGE_WAIT_ATTEMPTS; attempt += 1) {
+    const sdk = currentBridge();
+    if (sdk) return sdk;
+    await new Promise((resolve) => setTimeout(resolve, BRIDGE_WAIT_INTERVAL_MS));
   }
-});
+  // 入口不对时给中文提示，别让用户以为插件坏了
+  throw new Error("bridge 未就绪：请从 AstrBot 插件详情页打开本视图");
+}
 
-render().catch((error) => {
+/* ---- 渲染 ---- */
+
+async function main() {
+  const bridge = await waitForBridge();
+  const context = await bridge.ready();
+
+  els.title.textContent = bridge.t(
+    "views.example.title",
+    context?.displayName || "",
+  );
+  els.hint.textContent = bridge.t("views.example.hint", "");
+
+  /* ---- 交互 ---- */
+
+  els.ping.addEventListener("click", async () => {
+    try {
+      show(await bridge.apiGet("ping", { limit: 20 }));
+    } catch (error) {
+      show(`❌ ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
+}
+
+main().catch((error) => {
   show(`❌ ${error instanceof Error ? error.message : String(error)}`);
 });
