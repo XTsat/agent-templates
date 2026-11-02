@@ -1,0 +1,72 @@
+/* 主题变量：AstrBot 会把当前主题同步到 <html data-theme="light|dark">，这里只接住即可。
+   不要 import 外部 UI 框架，也不要写死颜色。 */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #3b82f6;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --fg: #e6e6e6;
+  --muted: #9ca3af;
+  --border: #374151;
+  --accent: #60a5fa;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.view {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 20px;
+}
+
+.view__header h1 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.view__hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.view__body {
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+}
+
+.output {
+  min-height: 60px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

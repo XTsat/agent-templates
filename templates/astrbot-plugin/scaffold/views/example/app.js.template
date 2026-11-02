@@ -1,0 +1,41 @@
+/* ---- bridge ---- */
+
+// 视图永远从 bridge 走：沙箱 iframe 里没有 Dashboard 会话，裸 fetch / EventSource 拿不到鉴权
+const bridge = window.AstrBotPluginView ?? window.AstrBotPluginPage;
+if (!bridge) {
+  throw new Error("bridge 未就绪：请从 AstrBot 插件详情页打开本视图");
+}
+
+const els = {
+  title: document.getElementById("view-title"),
+  hint: document.getElementById("view-hint"),
+  ping: document.getElementById("ping"),
+  output: document.getElementById("output"),
+};
+
+/* ---- 渲染 ---- */
+
+function show(value) {
+  els.output.textContent =
+    typeof value === "string" ? value : JSON.stringify(value, null, 2);
+}
+
+async function render() {
+  const context = await bridge.ready();
+  els.title.textContent = bridge.t("views.example.title", context.displayName || "");
+  els.hint.textContent = bridge.t("views.example.hint", "");
+}
+
+/* ---- 交互 ---- */
+
+els.ping.addEventListener("click", async () => {
+  try {
+    show(await bridge.apiGet("ping", { limit: 20 }));
+  } catch (error) {
+    show(`❌ ${error instanceof Error ? error.message : String(error)}`);
+  }
+});
+
+render().catch((error) => {
+  show(`❌ ${error instanceof Error ? error.message : String(error)}`);
+});

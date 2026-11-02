@@ -1,17 +1,50 @@
-# {{ plugin_name }} 插件页面国际化
+# {{ plugin_name }} 插件国际化
+
+> 复制到 `.astrbot-plugin/i18n/zh-CN.json` 与 `en-US.json`（文件名用 WebUI 的 locale）。改完需要**重载插件**才生效。
+> 顶层三块：`metadata`（插件名/描述）、`config`（配置项文案，键与 `_conf_schema.json` 对齐）、`views`（视图标题与页面文案，键与 `views/` 目录名一致）。
 
 ## zh-CN.json
 
 {
-  "pluginName": "{{ plugin_name }}",
-  "pageTitle": "页面标题",
-  "pageDescription": "页面描述"
+  "metadata": {
+    "display_name": "{{ display_name }}",
+    "short_desc": "一句话介绍",
+    "desc": "详细描述"
+  },
+  "config": {
+    "timeout": {
+      "description": "超时时间（秒）",
+      "hint": "超过该时长未响应即判定失败并重试"
+    }
+  },
+  "views": {
+    "example": {
+      "title": "示例视图",
+      "description": "演示插件视图如何通过 bridge 调用后端",
+      "hint": "页面通过 bridge 调用插件后端，不要用裸 fetch。"
+    }
+  }
 }
 
 ## en-US.json
 
 {
-  "pluginName": "{{ plugin_name }}",
-  "pageTitle": "Page Title",
-  "pageDescription": "Page description"
+  "metadata": {
+    "display_name": "{{ display_name }}",
+    "short_desc": "One-line intro",
+    "desc": "Detailed description"
+  },
+  "config": {
+    "timeout": {
+      "description": "Timeout (seconds)",
+      "hint": "Treat the request as failed and retry when it exceeds this duration"
+    }
+  },
+  "views": {
+    "example": {
+      "title": "Example view",
+      "description": "Shows how a plugin view calls the backend through the bridge",
+      "hint": "Call the plugin backend through the bridge, not with bare fetch."
+    }
+  }
 }

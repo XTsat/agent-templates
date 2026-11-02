@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ display_name }}</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="view">
+      <header class="view__header">
+        <h1 id="view-title">{{ display_name }}</h1>
+        <p class="view__hint" id="view-hint">页面通过 bridge 调用插件后端，不要用裸 fetch。</p>
+      </header>
+      <section class="view__body">
+        <button class="btn" id="ping" type="button">Ping 后端</button>
+        <pre class="output" id="output"></pre>
+      </section>
+    </main>
+    <!-- 必须是外部 module 脚本：bridge SDK 由 AstrBot 注入，内联脚本可能早于它就绪 -->
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
