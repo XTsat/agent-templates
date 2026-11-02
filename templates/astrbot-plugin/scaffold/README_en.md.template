@@ -22,18 +22,26 @@
 
 ## Configuration
 
+### Basic
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `timeout` | int | 30 | Timeout in seconds |
-| `max_retries` | int | 3 | Max retry count |
+| Timeout (`timeout`) | int | 30 | Timeout in seconds |
+| Max retries (`max_retries`) | int | 3 | Max retry count |
+
+<details>
+<summary>Advanced (2 options)</summary>
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| Concurrency limit (`max_concurrency`) | int | 3 | How many tasks run at once; the rest queue up |
+| Notify admin on failure (`notify_admin`) | bool | true | Send admins a notice when processing fails |
+
+</details>
 
 ## Misc
 
-### Installation
+<!-- Only keep "Requirements" when there is a real restriction to state (a feature needs a newer AstrBot, only certain adapters work, a special deployment is required). Delete the section otherwise; the minimum version range belongs in metadata.yaml (astrbot_version). -->
+### Requirements
 
-Clone this repository into AstrBot's `addons/` directory and restart AstrBot.
-
-### Dependencies
-
-- Python 3.10+
-- AstrBot >= 4.x
+- The web panel needs AstrBot `>= 4.24.0`; older versions get the commands only.

@@ -1,14 +1,12 @@
-name: {{ plugin_name }}
-display_name: {{ display_name }}
-desc: {{ description }}
-version: {{ version }}
+name: {{ plugin_name }}                    # 插件标识符，唯一，与目录名一致
+display_name: {{ display_name }}           # 插件市场 / WebUI 展示名（README 中文 h1 取这个字段）
+desc: {{ description }}                    # 详细描述，支持 Markdown
+version: {{ version }}                     # 唯一版本源：日常改动不递增，发版时才确认
 author: {{ author }}
 repo: https://github.com/XTsat/{{ plugin_name }}
-tags:
+# astrbot_version: ">=4.16,<5"             # 可选：只在能明确最低支持版本时才填（PEP 440 范围，安装/加载时会校验拦截）；拿不准就保持注释，别写估算值
+support_platforms:                         # 可选：WebUI 插件页展示支持的平台适配器
+  - aiocqhttp
+tags:                                      # 可选：插件市场分类与搜索
   - 标签1
   - 标签2
-platform:
-  - aiocqhttp
-  - wechatpadpro
-  - telegram
-  - discord
