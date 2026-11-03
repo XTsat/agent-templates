@@ -31,12 +31,14 @@
 | Max retries (`max_retries`) | int | 3 | Max retry count |
 
 <details>
-<summary>Advanced (2 options)</summary>
+<summary>Advanced (4 options)</summary>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | Concurrency limit (`max_concurrency`) | int | 3 | How many tasks run at once; the rest queue up |
 | Notify admin on failure (`notify_admin`) | bool | true | Send admins a notice when processing fails |
+| Proxy (`proxy`) | string | empty | Proxy for outbound requests; empty means direct |
+| Debug logging (`debug_log`) | bool | false | Print verbose logs; enable only when troubleshooting |
 
 </details>
 

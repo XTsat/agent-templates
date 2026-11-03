@@ -32,12 +32,14 @@
 | 最大重试次数（`max_retries`） | int | 3 | 失败后最大重试次数 |
 
 <details>
-<summary>高级设置（2 项）</summary>
+<summary>高级设置（4 项）</summary>
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | 并发上限（`max_concurrency`） | int | 3 | 同时处理的任务数量上限，超出后排队 |
 | 失败时通知管理员（`notify_admin`） | bool | true | 处理失败时给管理员发提示 |
+| 代理地址（`proxy`） | string | 空 | 访问外部接口时走的代理，留空直连 |
+| 调试日志（`debug_log`） | bool | false | 输出详细日志，排障时再打开 |
 
 </details>
 
