@@ -5,7 +5,7 @@
 >
 > 适用项目：`astrbot_plugin_*` 命名的 AstrBot 插件（Python）。
 >
-> **模板版本**：v0.1.7（2026-11-04） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
+> **模板版本**：v0.1.8（2026-11-04） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
 > **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/astrbot-plugin/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
 > 用户说「更新 AGENTS」时按此流程：① 打开来源仓库该模板的 `AGENTS.md`，比对头部「模板版本」与本地是否一致——一致说明已是最新，直接结束，不必拉取逐节比对 → ② 不一致才拉取来源模板最新版 → ③ 与本地逐节比对 → ④ 合并（保留本项目已回填的插件名、命令前缀、目录结构与项目特有约定）→ ⑤ 展示 diff 与改动清单，等用户确认后再落盘，并把头部「模板版本」同步改为合并到的版本。**禁止整文件覆盖**。
 
@@ -20,7 +20,7 @@
 | 文件 | 必选 | 职责 |
 |------|------|------|
 | `main.py` | ✅ | 插件主体，全部后端逻辑 |
-| `metadata.yaml` | ✅ | 插件元数据（必填 `name`/`desc`/`version`/`author`；推荐 `display_name`/`repo`；可选 `support_platforms`/`tags`（**全量**关键词，README 头部只挑代表）、`short_desc`，`astrbot_version` 只在能明确最低版本时才填） |
+| `metadata.yaml` | ✅ | 插件元数据（必填 `name`/`desc`/`version`/`author`；推荐 `display_name`/`repo`；可选 `support_platforms`/`tags`（**全量、单概念**关键词，README 头部只挑重点）、`short_desc`，`astrbot_version` 只在能明确最低版本时才填） |
 | `_conf_schema.json` | ✅ | WebUI 配置 Schema（扁平 `{key: {type, description, default, ...}}`，定义所有可配置项） |
 | `README.md` | ✅ | 中文文档（功能说明、命令表、配置说明） |
 | `CHANGELOG.md` | ✅ | 变更日志 |
@@ -232,7 +232,7 @@ class MyPlugin(Star):
 - **格式是扁平字典**：顶层 key 就是配置项 key，值是该配置项的 schema 节点（见下方示例）。**没有 `fields` 数组、没有 `schemaVersion` 之类的自造外壳**——AstrBot 直接把整个 JSON 当「key → 节点」解析，套错外壳等于没有配置项
 - 常用节点字段：`type`（必填，`string`/`text`/`int`/`float`/`bool`/`object`/`list`/`dict`/`template_list`）、`description`（WebUI 显示的配置名）、`hint`（右侧问号里的补充说明）、`default`、`options`+`labels`+`subtitles`（下拉选项）、`slider`（`{"min","max","step"}`，仅 int/float）、`secret`（密钥类字符串遮罩显示）、`invisible`、`items`（`object`/`dict` 的子 schema）、`_special`（用户/会话选择器等）
 - 配置分组用 `object` 嵌套表达（子 schema 放 `items`），WebUI 会按层级展示；**不要在 schema 里发明分组字段**
-- 配置项在文档（README 配置表、CHANGELOG）中引用时，**中文名在前、英文 key 在后**：统一写成「中文名（`key`）」形式，例如「超时时间（`timeout`）」「转发图片到游戏内（`forward_image_to_mc`）」；中文名取自 `_conf_schema.json` 的 `description` 字段（`hint` 是问号提示，不要用它当配置名），`key` 用反引号包裹。
+- 配置项在文档（README 配置表、CHANGELOG）中引用时，**中文名在前、英文 key 在后**：统一写成「中文名（`key`）」形式，例如「超时时间（`timeout`）」「转发图片到其它群（`forward_image`）」；中文名取自 `_conf_schema.json` 的 `description` 字段（`hint` 是问号提示，不要用它当配置名），`key` 用反引号包裹。
 - 配置持久化：`self.config["rules"]` 读写 → `self.config.save_config()` 保存
 - 数据文件存于 `astrbot/data/plugin_data/<插件名>/`（通过 `StarTools.get_data_dir("插件名")` 获取路径）
 - 写操作持 `asyncio.Lock`，读写用 `encoding="utf-8"` + `ensure_ascii=False`
@@ -387,7 +387,7 @@ CHANGELOG 的读者是**插件使用者**（服务器管理员、群成员），
 
 ```markdown
 ### 新增
-- ✅ 转发图片到游戏内（`forward_image_to_mc`）：开启后图片以地图画形式发送
+- ✅ 转发图片到其它群（`forward_image`）：开启后图片自动跟转到指定群聊
 - ❌ 新增 `_rebuild_media_component` 并重构消息构造链路，改用 dataclass 缓存节点
 
 ### 修复
@@ -427,8 +427,8 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 正反例：
 
 ```markdown
-- ✅ 支持把图片以地图画形式转发到游戏内（需在配置中开启）
-- ❌ 图片经 `_rebuild_media_component` 转为 dataclass 节点，再由 worker 渲染为地图画
+- ✅ 开启后图片会跟转到指定群聊（需在配置里开启转发）
+- ❌ 图片经 `_rebuild_media_component` 转为 dataclass 节点，再由 worker 渲染
 ```
 
 #### 7.2.2 头部的表头格式
@@ -441,7 +441,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 <div align="center">
 <h1>DisplayName</h1>
 <p><strong>插件描述（desc）</strong></p>
-<!-- sub 行只放 2–4 个代表标签（每个主要能力方向各取一个），全量标签留在 metadata.yaml 的 tags -->
+<!-- sub 行只挑插件真正的重点功能（数量不限，可为 metadata tags 的变体），全量标签留在 metadata.yaml 的 tags -->
 <p><sub>标签1 &nbsp;&nbsp; 标签2 &nbsp;&nbsp; 标签3</sub></p>
 <p><strong>中文</strong> &nbsp;/&nbsp; <a href="README_en.md">English</a></p>
 </div>
@@ -454,7 +454,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 <h1>Plugin Name</h1>
 <!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
 <p><strong>Plugin description</strong></p>
-<!-- only 2–4 representative tags here; the full tag list lives in metadata.yaml -->
+<!-- list only the plugin's headline features here (no fixed count; wording may be a variant of the metadata tags); the full tag list lives in metadata.yaml -->
 <p><sub>tag1 &nbsp;&nbsp; tag2 &nbsp;&nbsp; tag3</sub></p>
 <p><a href="README.md">中文</a> &nbsp;/&nbsp; <strong>English</strong></p>
 </div>
@@ -464,7 +464,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 - **中文版 h1**：直接取 `metadata.yaml` 的 `display_name` 字段（如 `模型状态检测`、`跨平台消息转发`）。
 - **英文版 h1**：取插件名 `astrbot_plugin_xxx` 中的 `xxx` 部分，拆分为单词后每个首字母大写。例如 `astrbot_plugin_reread` → `Reread`；`astrbot_plugin_model_status` → `Model Status`；`astrbot_plugin_help_panel_typst` → `Help Panel Typst`。
 - **desc**：中文版用 `metadata.yaml` 的 `desc` 字段；英文版做地道翻译。
-- **标签（tags）**：`metadata.yaml` 的 `tags` 是**全量**清单——各能力方向的关键词都列上（供市场分类与搜索），**不因为 README 头部放不下就删减**；README 头部的 `<sub>` 行**只放代表标签（2–4 个）**，按重要性排序、每个主要能力方向各取一个，只能从 `tags` 里挑（不要新增 `tags` 里没有的标签），用 `&nbsp;&nbsp;` 分隔。中文版用中文标签，英文版用英文标签。
+- **标签（tags）**：`metadata.yaml` 的 `tags` 是**全量关键词清单**（供市场分类与搜索），**不因为 README 头部放不下就删减**；并且**每个标签只放一个概念**——复合词要拆开（「消息转发」→「消息」「转发」，「状态检测」→「状态」「检测」），不写「A+B」式复合词、不写整句，这样一个词条能被独立检索命中。README 头部的 `<sub>` 行只挑**插件真正的重点功能**当标签，**数量不硬性限定**（重点少就两三个，重点多可多列），按重要性排序，用 `&nbsp;&nbsp;` 分隔；README 的标签**可以写成 `tags` 的变体**（措辞更短、更面向用户，允许复合短语，如「消息转发」对应 `tags` 里的「消息」「转发」），不必逐字照抄，但必须是插件真实具备、用户能感知的能力，**不虚构、不夸大**。中文版用中文标签，英文版用英文标签。
 
 #### 7.2.3 README 四大结构
 
@@ -595,7 +595,7 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 - [ ] CHANGELOG：`[Unreleased]` 已追加条目，**只写相对上一版的变化**、同一变化已合并为一条（无重复条目），条目面向用户（无内部实现细节、无复杂形容即可看懂），保留了他人的既有记录
 - [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
 - [ ] README 配置板块：> 4 项时已按类别分组，单类 ≥ 4 项已用 `<details>` 折叠且 summary 自解释，首次必填的关键配置没被藏进折叠（配置表是备查资料，宁折叠勿铺长）
-- [ ] 标签：`metadata.yaml` 的 `tags` 是全量能力关键词（未因 README 只显示代表标签而删减）；中英两份 README 头部只放 2–4 个代表标签，且都能在 `tags` 里找到
+- [ ] 标签：`metadata.yaml` 的 `tags` 是全量关键词且**一个标签一个概念**（复合词已拆开，未因 README 只显示重点而删减）；中英两份 README 头部只列插件真正的重点功能（数量不限，可为 `tags` 的变体，但不虚构能力）
 - [ ] README 安装：未写分步「快速开始/安装」（插件市场/安装页装完即用）；版本与协议端仅在确有明确限制时才写，最低版本能明确时写进 `metadata.yaml` 的 `astrbot_version`（不在 README 重复，也不填估算值）
 - [ ] 许可证：未自行创建 `LICENSE`、README 中无许可证小节/徽章/许可证名（用户明确指定许可证时才建 `LICENSE`，仍不写进 README）
 - [ ] 版本号：日常任务不递增版本号；仅发版任务改 `metadata.yaml` 的 `version`（与 CHANGELOG 新版本段、tag 一致），并把 `@register`、README 徽章、i18n 等辅助位置同步到同一版本号
