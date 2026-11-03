@@ -7,6 +7,8 @@ repo: https://github.com/XTsat/{{ plugin_name }}
 # astrbot_version: ">=4.16,<5"             # 可选：只在能明确最低支持版本时才填（PEP 440 范围，安装/加载时会校验拦截）；拿不准就保持注释，别写估算值
 support_platforms:                         # 可选：WebUI 插件页展示支持的平台适配器
   - aiocqhttp
-tags:                                      # 可选：插件市场分类与搜索
+tags:                                      # 可选：插件市场分类与搜索——这里是全量口径，各能力方向的关键词都列上，不因 README 头部只显示代表标签而删减
   - 标签1
   - 标签2
+  - 标签3
+  - 标签4

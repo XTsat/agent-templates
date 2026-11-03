@@ -2,6 +2,7 @@
 <h1>Plugin Name</h1>
 <!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
 <p><strong>Plugin description</strong></p>
+<!-- only 2–4 representative tags here; the full tag list lives in metadata.yaml -->
 <p><sub>tag1 &nbsp;&nbsp; tag2 &nbsp;&nbsp; tag3</sub></p>
 <p><a href="README.md">中文</a> &nbsp;/&nbsp; <strong>English</strong></p>
 </div>
