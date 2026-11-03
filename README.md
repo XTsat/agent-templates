@@ -97,9 +97,12 @@ agent-templates/
 │           ├── CHANGELOG.md.template
 │           └── README.md.template
 └── skills/
-    ├── astrbot-plugin-hot-reloading/ # 热重载 AstrBot 插件（仅用户主动提出时使用）
+    ├── astrbot-plugin-hot-reloading-rsync/ # 热重载 AstrBot 插件，rsync 写宿主目录（需宿主写权限）
     │   ├── SKILL.md               #   说明、通过标准与失败处置
-    │   └── run.sh                 #   一步执行脚本（一次授权跑完同步→重载→验证）
+    │   └── run.sh                 #   一步执行脚本（跑完同步→重载→验证）
+    ├── astrbot-plugin-hot-reloading-exec/ # 同上，经容器内进程写入（宿主无写权限也能用）
+    │   ├── SKILL.md               #   说明、通过标准与失败处置
+    │   └── run.sh                 #   一步执行脚本（跑完写入→哈希校验→重载→验证）
     └── astrbot-plugin-readme-cleaner/ # 精简 AstrBot 插件 README（SKILL.md，仅用户主动提出时使用）
         └── SKILL.md
 ```
@@ -110,7 +113,8 @@ agent-templates/
 
 | Skill | 用途 | 触发方式 |
 |---|---|---|
-| [`astrbot-plugin-hot-reloading`](skills/astrbot-plugin-hot-reloading/SKILL.md) | 热重载 AstrBot 插件（同步源码 + 插件级重载，附一步执行脚本 `run.sh`） | **仅用户主动提出时使用**（如「热重载插件」），不自动触发 |
+| [`astrbot-plugin-hot-reloading-rsync`](skills/astrbot-plugin-hot-reloading-rsync/SKILL.md) | 热重载 AstrBot 插件：用 rsync 直接写宿主挂载目录（需宿主侧写权限，沙箱环境需一次授权），附一步执行脚本 `run.sh` | **仅用户主动提出时使用**（如「热重载插件」），不自动触发 |
+| [`astrbot-plugin-hot-reloading-exec`](skills/astrbot-plugin-hot-reloading-exec/SKILL.md) | 部署 AstrBot 插件并热重载：源码经容器内进程写入挂载目录（不写宿主路径、不用 rsync），宿主侧无写权限时也能用 | **仅用户主动提出时使用**（如「部署插件」「热重载插件」），不自动触发 |
 | [`astrbot-plugin-readme-cleaner`](skills/astrbot-plugin-readme-cleaner/SKILL.md) | 精简 AstrBot 插件 README（删原理、留功能，双语同步） | **仅用户主动提出时使用**（如「精简文档」「README 太复杂」），不自动触发 |
 
 `skills/` 下的 `SKILL.md` 与运行环境 `dsh-data/skills/` 保持同步。

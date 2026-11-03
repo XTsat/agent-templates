@@ -1,9 +1,11 @@
 ---
-name: astrbot-plugin-hot-reloading
-description: '热重载 AstrBot 插件（同步源码 + 插件级重载）。仅在用户主动提出时使用。'
+name: astrbot-plugin-hot-reloading-rsync
+description: '热重载 AstrBot 插件：用 rsync 直接写宿主挂载目录（需要宿主侧写权限，沙箱环境需一次授权）。仅在用户主动提出时使用。'
 ---
 
-热重载 AstrBot 插件（同步源码 + 插件级重载）
+部署 AstrBot 插件并热重载（rsync 写宿主挂载目录版）
+
+> 与 `astrbot-plugin-hot-reloading-exec` 只有写入通道不同，通过标准一致。宿主目录不可写（例如 DSH 沙箱内、root 也 `Permission denied`）时，改用 `astrbot-plugin-hot-reloading-exec`。
 
 **使用约定：仅当用户主动提出（如「热重载插件」「热更新 AstrBot 插件」）时才使用本 skill，不得在普通改动流程中自动执行。**
 
