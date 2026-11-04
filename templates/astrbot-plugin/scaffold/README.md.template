@@ -1,4 +1,5 @@
 <div align="center">
+<img src="logo.png" alt="DisplayName" width="160" />
 <h1>DisplayName</h1>
 <!-- 中文版 h1 = metadata.yaml 的 display_name 字段 -->
 <!-- 英文版 h1 = astrbot_plugin_xxx 的 xxx 部分拆分后首字母大写，如 reread → Reread -->

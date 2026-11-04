@@ -5,7 +5,7 @@
 >
 > 适用项目：`astrbot_plugin_*` 命名的 AstrBot 插件（Python）。
 >
-> **模板版本**：v0.1.8（2026-11-04） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
+> **模板版本**：v0.1.9（2026-11-04） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
 > **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/astrbot-plugin/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
 > 用户说「更新 AGENTS」时按此流程：① 打开来源仓库该模板的 `AGENTS.md`，比对头部「模板版本」与本地是否一致——一致说明已是最新，直接结束，不必拉取逐节比对 → ② 不一致才拉取来源模板最新版 → ③ 与本地逐节比对 → ④ 合并（保留本项目已回填的插件名、命令前缀、目录结构与项目特有约定）→ ⑤ 展示 diff 与改动清单，等用户确认后再落盘，并把头部「模板版本」同步改为合并到的版本。**禁止整文件覆盖**。
 
@@ -439,6 +439,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 
 ```html
 <div align="center">
+<img src="logo.png" alt="DisplayName" width="160" />
 <h1>DisplayName</h1>
 <p><strong>插件描述（desc）</strong></p>
 <!-- sub 行只挑插件真正的重点功能（数量不限，可为 metadata tags 的变体），全量标签留在 metadata.yaml 的 tags -->
@@ -451,6 +452,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 
 ```html
 <div align="center">
+<img src="logo.png" alt="Plugin Name" width="160" />
 <h1>Plugin Name</h1>
 <!-- 英文 h1 取插件名后缀首字母大写：astrbot_plugin_model_status → Model Status -->
 <p><strong>Plugin description</strong></p>
@@ -461,6 +463,7 @@ README 的读者是**插件使用者**（服务器管理员、群成员），不
 ```
 
 命名规则：
+- **Logo**：头部第一行固定放插件图标 `<img src="logo.png" alt="插件名" width="160" />`——`logo.png` 与本 README 同目录、用相对路径引用（不写 GitHub raw 绝对链接、不复用 `metadata.yaml` 的远程图标地址）；`alt` 必填（中文版写 `display_name`，英文版写英文插件名），宽度固定 `160`，不加圆角/阴影等额外样式；中英两版都要有。
 - **中文版 h1**：直接取 `metadata.yaml` 的 `display_name` 字段（如 `模型状态检测`、`跨平台消息转发`）。
 - **英文版 h1**：取插件名 `astrbot_plugin_xxx` 中的 `xxx` 部分，拆分为单词后每个首字母大写。例如 `astrbot_plugin_reread` → `Reread`；`astrbot_plugin_model_status` → `Model Status`；`astrbot_plugin_help_panel_typst` → `Help Panel Typst`。
 - **desc**：中文版用 `metadata.yaml` 的 `desc` 字段；英文版做地道翻译。
@@ -595,6 +598,7 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 - [ ] CHANGELOG：`[Unreleased]` 已追加条目，**只写相对上一版的变化**、同一变化已合并为一条（无重复条目），条目面向用户（无内部实现细节、无复杂形容即可看懂），保留了他人的既有记录
 - [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
 - [ ] README 配置板块：> 4 项时已按类别分组，单类 ≥ 4 项已用 `<details>` 折叠且 summary 自解释，首次必填的关键配置没被藏进折叠（配置表是备查资料，宁折叠勿铺长）
+- [ ] README 头部：首行是 `<img src="logo.png" alt="插件名" width="160" />`，中英两版都有，`alt` 已填，头部元素间无空行
 - [ ] 标签：`metadata.yaml` 的 `tags` 是全量关键词且**一个标签一个概念**（复合词已拆开，未因 README 只显示重点而删减）；中英两份 README 头部只列插件真正的重点功能（数量不限，可为 `tags` 的变体，但不虚构能力）
 - [ ] README 安装：未写分步「快速开始/安装」（插件市场/安装页装完即用）；版本与协议端仅在确有明确限制时才写，最低版本能明确时写进 `metadata.yaml` 的 `astrbot_version`（不在 README 重复，也不填估算值）
 - [ ] 许可证：未自行创建 `LICENSE`、README 中无许可证小节/徽章/许可证名（用户明确指定许可证时才建 `LICENSE`，仍不写进 README）
