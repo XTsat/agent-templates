@@ -9,6 +9,7 @@ from collections.abc import AsyncGenerator
 
 from astrbot.api.star import Context, Star, StarTools, register
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
+# 日志只从 astrbot.api 取（禁止 import logging / logging.getLogger，见 AGENTS.md 4.5）
 from astrbot.api import AstrBotConfig, logger
 
 # 给 views/ 提供后端接口时再按需引入（写法见 AGENTS.md 4.10）

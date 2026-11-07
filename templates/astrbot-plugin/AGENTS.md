@@ -5,7 +5,7 @@
 >
 > 适用项目：`astrbot_plugin_*` 命名的 AstrBot 插件（Python）。
 >
-> **模板版本**：v0.1.9（2026-11-04） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
+> **模板版本**：v0.1.10（2026-11-07） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
 > **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/astrbot-plugin/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
 > 用户说「更新 AGENTS」时按此流程：① 打开来源仓库该模板的 `AGENTS.md`，比对头部「模板版本」与本地是否一致——一致说明已是最新，直接结束，不必拉取逐节比对 → ② 不一致才拉取来源模板最新版 → ③ 与本地逐节比对 → ④ 合并（保留本项目已回填的插件名、命令前缀、目录结构与项目特有约定）→ ⑤ 展示 diff 与改动清单，等用户确认后再落盘，并把头部「模板版本」同步改为合并到的版本。**禁止整文件覆盖**。
 
@@ -89,6 +89,7 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 - **AstrBot API**：`astrbot.api.star`（Context, Star, register, StarTools）、`astrbot.api.event`（filter, AstrMessageEvent）、`astrbot.api`（logger, AstrBotConfig）
 - **依赖管理**：`requirements.txt` 中声明，复杂依赖优先 **惰性 import**（在方法内 import，避免启动时强制加载）
 - **禁止引入**：不引入与原功能无关的依赖；非必要不新增 `requirements.txt` 声明
+- **日志库**：唯一来源是 `from astrbot.api import logger`（AstrBot 官方插件文档要求「使用 `astrbot.api` 的 logger，而不是 `logging` 模块」）。**禁止** `import logging` / `logging.getLogger(...)` / `logging.basicConfig(...)`，也禁止 `loguru` 等第三方日志库、禁止把日志库写进 `requirements.txt`。理由与分层项目的写法见 4.5
 - AstrBot 运行时已自带的依赖（如 `aiohttp`、`certifi`）可在惰性 import 中引用，import 失败时优雅降级
 
 ---
@@ -153,6 +154,9 @@ class MyPlugin(Star):
 
 ### 4.5 日志
 
+- **日志来源唯一**：`from astrbot.api import logger`。**禁止** `import logging` / `logging.getLogger(...)`（含「SDK 缺失时退回标准库 logging」这类降级分支），也**禁止** `loguru` 等第三方日志库——AstrBot 官方插件文档原文是「请务必使用 `from astrbot.api import logger` 来获取日志对象，而不是使用 `logging` 模块」。
+- **为什么自建 logger 不行**：`astrbot.api.logger` 按**调用位置**路由到本插件专属 logger（`astrbot.plugin.<插件名>`）。插件内任意模块直接 `from astrbot.api import logger` 就会自动归属本插件，不需要自建、也不需要把 logger 当参数层层传递。自建 `logging.getLogger("astrbot_plugin_x.xxx")` 的名字对不上这条链路：日志没有插件归属、插件详情页的独立日志等级与面板的按插件筛选都不生效。
+- **分层多文件项目里要「脱离 AstrBot 单测」的层**（如 `core/`、`webapi/` 的非适配模块）：**不要**为了不 import `astrbot` 就退回标准库 logging；在该层只留一个可注入的日志出口（如 `core/logger.py` 暴露 `get_logger()` / `set_logger()`），由 `main.py` 在 `initialize()` 里注入 `astrbot.api.logger`；未注入时直接写 stderr 兜底，同样不 import `logging`。用一条 AST 测试守住「全仓无 `import logging` / `loguru`」。
 - 统一 `logger.info/warning/error`，**必须带 `[{PLUGIN_NAME}]` 前缀**
 - 错误信息带 emoji 前缀（如 `❌`、`⚠️`）
 - 精确捕获异常类型（`asyncio.TimeoutError`），禁止空 `except: pass`（除非注释说明理由）
@@ -594,7 +598,7 @@ README 正文严格按以下 4 大板块组织，但不强制使用 `##` 标题�
 
 - [ ] 架构：所选风格（单文件 / 分层多文件）与既有代码一致
 - [ ] 注释：只写 non-obvious reason，无残留中间状态、无被注释掉的旧代码
-- [ ] 日志：`[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
+- [ ] 日志：来源只有 `astrbot.api` 的 logger（无 `import logging` / `logging.getLogger` / 第三方日志库），`[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
 - [ ] CHANGELOG：`[Unreleased]` 已追加条目，**只写相对上一版的变化**、同一变化已合并为一条（无重复条目），条目面向用户（无内部实现细节、无复杂形容即可看懂），保留了他人的既有记录
 - [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
 - [ ] README 配置板块：> 4 项时已按类别分组，单类 ≥ 4 项已用 `<details>` 折叠且 summary 自解释，首次必填的关键配置没被藏进折叠（配置表是备查资料，宁折叠勿铺长）
