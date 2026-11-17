@@ -1,5 +1,7 @@
 # Changelog
 
+<!-- 发版时把 [Unreleased] 落成 `## vX.Y.Z (日期)`；`[Unreleased]` 与最近 3 个版本段保持展开，第 4 个及更早的版本段用 <details><summary>版本号 (日期) — 一句话总结</summary> 折起（规则见 AGENTS.md 7.1「老版本折叠」）。 -->
+
 ## [Unreleased]
 
 > {{ 一句话总结这个版本（可选） }}
