@@ -1,5 +1,9 @@
 # agent-templates
 
+[![astrbot-plugin](https://img.shields.io/badge/astrbot--plugin-v0.1.16-blue?style=flat-square)](templates/astrbot-plugin/AGENTS.md)
+[![nextjs-webapp](https://img.shields.io/badge/nextjs--webapp-v0.1.6-blue?style=flat-square)](templates/nextjs-webapp/AGENTS.md)
+[![generic](https://img.shields.io/badge/generic-v0.1.6-blue?style=flat-square)](templates/generic/AGENTS.md)
+
 > 一套**可直接被 AI 编码代理（agent）自动读取并遵循**的项目规范模板仓库。
 > 每个模板目录都是**自包含**的：agent 只需读取对应模板的 `AGENTS.md`，即可一次性学会该类项目的全部约定（架构、代码规范、文档维护、提交流程）。
 
@@ -31,7 +35,7 @@
 
 > 判定顺序：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；Next.js + TypeScript → 用 `nextjs-webapp`；其余类型一律用 `generic`。
 > 版本号约定（全模板统一）：**只在准备发布时递增**——日常每个功能/修复各自独立提交、不带版本号变更，一次发版汇总多个提交后合并到指定版本时才确认版本号，避免版本号随提交次数突进。发版时先改**唯一版本源文件**（`astrbot-plugin` → `metadata.yaml`；`nextjs-webapp` → `package.json`；`generic` → `{{ 版本号文件 }}`），再把 README 徽章、正文版本字样、i18n 文案等**辅助位置同步到同一个版本号**（辅助位置不决定版本号，但发版不能落下）。
-> 模板版本约定：每个模板另有一个**独立维护的模板版本**，写在该模板 `AGENTS.md` 头部一行（`> **模板版本**：vX.Y.Z（YYYY-MM-DD）`），三个模板各自编号、互不牵扯；改动涉及模板内容时推送前递增，只改本仓库自身文件（根 `README.md` / 根 `AGENTS.md` / `skills/`）不递增。派生项目通过比对自己 `AGENTS.md` 顶部的这一行判断是否需要更新，规则细则见根 [`AGENTS.md`](AGENTS.md) 第 4 节。
+> 模板版本约定：每个模板另有一个**独立维护的模板版本**，写在该模板 `AGENTS.md` 头部一行（`> **模板版本**：vX.Y.Z（YYYY-MM-DD）`），三个模板各自编号、互不牵扯；改动涉及模板内容时推送前递增，只改本仓库自身文件（根 `README.md` / 根 `AGENTS.md` / `skills/`）不递增。派生项目通过比对自己 `AGENTS.md` 顶部的这一行判断是否需要更新，规则细则见根 [`AGENTS.md`](AGENTS.md) 第 4 节。本 README 标题下的三枚版本徽章是模板版本的**辅助展示位**（不决定版本号）：递增哪个模板的版本，就同步把对应徽章改成新号，首页不得留旧号。
 
 ---
 
