@@ -13,25 +13,23 @@
 
 ## 1. 项目概览
 
-**AstrBot 插件**是基于 `astrbot.api.star` 框架的 Python 插件，以 `Star` 子类为核心，通过装饰器注册指令组、事件监听器、过滤器，在 AstrBot 运行时中加载。
+**AstrBot 插件**是基于 `astrbot.api.star` 的 Python 插件，以 `Star` 子类为核心，用装饰器注册指令组、事件监听器与过滤器。
 
 核心文件清单：
 
 | 文件 | 必选 | 职责 |
 |------|------|------|
 | `main.py` | ✅ | 插件主体，全部后端逻辑 |
-| `metadata.yaml` | ✅ | 插件元数据（必填 `name`/`desc`/`version`/`author`；推荐 `display_name`/`repo`；可选 `support_platforms`/`tags`（**全量、单概念**关键词，README 头部只挑重点）、`short_desc`，`astrbot_version` 只在能明确最低版本时才填） |
-| `_conf_schema.json` | ✅ | WebUI 配置 Schema（扁平 `{key: {type, description, default, ...}}`，定义所有可配置项） |
-| `README.md` | ✅ | 中文文档（功能说明、命令表、配置说明） |
+| `metadata.yaml` | ✅ | 插件元数据（字段规则见 §5） |
+| `_conf_schema.json` | ✅ | WebUI 配置 Schema（见 §5.1） |
+| `README.md` | ✅ | 中文文档 |
 | `CHANGELOG.md` | ✅ | 变更日志 |
-| `LICENSE` | 可选 | 许可证——**仅在用户明确指定许可证时创建**，禁止自行套用默认许可证 |
 | `logo.png` | ✅ | 插件图标（1:1，推荐 256×256） |
+| `LICENSE` | 可选 | 仅在用户明确指定许可证时创建 |
 | `requirements.txt` | 可选 | 运行时依赖 |
 | `.gitignore` | 可选 | Git 忽略规则 |
-| `.astrbot-plugin/` | 可选 | 插件 i18n 目录（`i18n/<locale>.json`：`metadata` 插件名/描述、`config` 配置项文案、`views` 视图标题） |
-| `views/` | 可选 | WebUI 可视化视图目录（原生 JS + bridge；AstrBot 4.x 首选，`pages/` 只是兼容别名） |
-
-> **许可证按需，且不进 README**：用户没明确说要「用哪个许可证」时，**不创建 `LICENSE` 文件、不在 metadata 或代码里标注许可证**，禁止默认套用 AGPL-3.0、MIT、Apache-2.0 等常见许可证；只有用户明确指定某个许可证时才新建 `LICENSE`。**README 一律不放许可证章节**——即使项目已有 `LICENSE` 文件，也不在 README 里写许可证小节。
+| `.astrbot-plugin/` | 可选 | i18n 目录（`i18n/<locale>.json`） |
+| `views/` | 可选 | WebUI 视图（原生 JS + bridge，见 [`docs/views.md`](docs/views.md)） |
 
 ---
 
@@ -62,12 +60,12 @@ astrbot_plugin_xxx/
 
 ### 2.2 架构倾向
 
-AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在整个生命周期内保持一致**：
+AstrBot 插件有两种主流架构风格，**新建项目时二选一，全程保持一致**：
 
-| 风格 | 适用场景 | 参考项目 |
-|---|---|---|
-| **单文件** | 逻辑简单（< 1500 行） | `astrbot_plugin_msg_forward_cc`、`astrbot_plugin_model_status` |
-| **分层多文件** | 逻辑复杂，需模块化 | `astrbot_plugin_help_panel_typst`（main.py → core → utils → domain） |
+| 风格 | 适用场景 |
+|---|---|
+| **单文件** | 逻辑简单（< 1500 行） |
+| **分层多文件** | 逻辑复杂，需模块化 |
 
 **单文件风格**：
 - 所有逻辑在 `main.py` 一个文件中，通过注释分隔条组织：`# 内部工具方法 → # Web API → # 数据持久化 → # 执行与调度 → # 聊天命令 → # 生命周期`
@@ -128,12 +126,12 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 
 ### 4.5 日志
 
-- **日志来源唯一**：`from astrbot.api import logger`。**禁止** `import logging` / `logging.getLogger(...)`（含「SDK 缺失时退回标准库」这类降级分支），**禁止** `loguru` 等第三方日志库。它按调用位置路由到 `astrbot.plugin.<插件名>`，自建 logger 名字对不上，插件详情页的独立日志等级与按插件筛选都会失效。
-- **分层项目里要脱离 AstrBot 单测的层**：不要退回标准库 logging；留一个可注入出口（如 `core/logger.py` 的 `get_logger()`/`set_logger()`），由 `main.py` 在 `initialize()` 注入 `astrbot.api.logger`，未注入时写 stderr 兜底。用一条 AST 测试守住「全仓无 `import logging`/`loguru`」。
+- **日志来源唯一**：`from astrbot.api import logger`。**禁止** `import logging` / `logging.getLogger(...)`（含「SDK 缺失时退回标准库」这类降级分支），**禁止** `loguru` 等第三方库——它按调用位置路由到 `astrbot.plugin.<插件名>`，自建 logger 会让插件详情页的独立日志等级与筛选失效。
+- **要脱离 AstrBot 单测的层**：留一个可注入出口（如 `core/logger.py` 的 `get_logger()`/`set_logger()`），由 `main.py` 在 `initialize()` 注入，未注入时写 stderr 兜底。用一条 AST 测试守住「全仓无 `import logging`/`loguru`」。
 - 统一 `logger.info/warning/error`，**必须带 `[{PLUGIN_NAME}]` 前缀**
-- 错误信息带 emoji 前缀（如 `❌`、`⚠️`）
+- 错误信息带 emoji 前缀（`❌`、`⚠️`）
 - 精确捕获异常类型（`asyncio.TimeoutError`），禁止空 `except: pass`（除非注释说明理由）
-- 异常分类记录：ValueError = 非法参数，OSError = 文件/IO 错误，各自记录，单规则失败不影响其它规则
+- 异常分类记录：ValueError = 非法参数，OSError = 文件/IO 错误；单规则失败不影响其它规则
 
 ### 4.6 错误处理与防御性编程
 
@@ -165,12 +163,16 @@ AstrBot 插件有两种主流架构风格，**新建项目时二选一，并在�
 
 ## 5. 配置与数据文件
 
-### 5.1 配置 Schema（_conf_schema.json）
+### 5.1 metadata.yaml 字段
+
+必填 `name`/`desc`/`version`/`author`；推荐 `display_name`/`repo`；可选 `support_platforms`/`tags`（**全量、单概念**）、`short_desc`；`astrbot_version` 仅在能明确最低版本时填。
+
+### 5.2 配置 Schema（_conf_schema.json）
 
 > 字段格式、类型取值、默认值与 WebUI 呈现规则见 [`docs/config.md`](docs/config.md)。**新增或修改配置项前先读它**，并确认三处同步：`_conf_schema.json` + 代码读取 + README 配置表。
 
 
-### 5.2 配置读取模式
+### 5.3 配置读取模式
 
 ```python
 DEFAULT_SETTINGS = {
@@ -255,16 +257,16 @@ async def on_message(
 - [ ] 架构：所选风格（单文件 / 分层多文件）与既有代码一致
 - [ ] 注释：只写 non-obvious reason，无残留中间状态、无被注释掉的旧代码
 - [ ] 日志：来源只有 `astrbot.api` 的 logger（无 `import logging` / `logging.getLogger` / 第三方日志库），`[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
-- [ ] CHANGELOG：`[Unreleased]` 已同步（新增则追加、同一变化则合并、发版前被撤销则删除对应条目，不残留相对上一版不成立的内容），**只写相对上一版（上一次发布）的变化**、同一变化已合并为一条（无重复条目），条目面向用户（无内部实现细节、无复杂形容即可看懂），保留了他人的既有记录
+- [ ] CHANGELOG：`[Unreleased]` 已同步且**只写相对上一版的变化**，同一变化合并为一条，条目面向用户，保留他人既有记录
 - [ ] CHANGELOG 折叠：`[Unreleased]` 与最近 3 个版本段展开，第 4 个起每个版本段各自一个 `<details>`，首个折叠前有 `---` 分隔；带 `⚠️ 破坏性变更`（或含 `### 移除`）的版本永不折叠（细则见 [`docs/changelog-format.md`](docs/changelog-format.md)）
 - [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
 - [ ] README 配置板块：> 4 项时按类别分组，单类 ≥ 4 项用 `<details>` 折叠且 summary 自解释，首次必填项没被藏进折叠
-- [ ] README 头部：首行是 `<img src="logo.png" alt="插件名" width="160" />`，中英两版都有，`alt` 已填，头部元素间无空行
-- [ ] 标签：`metadata.yaml` 的 `tags` 是全量关键词且一个标签一个概念；中英 README 头部只列重点功能（可为 tags 变体，不虚构能力）
-- [ ] README 安装：未写分步「快速开始/安装」；版本与协议端仅在确有明确限制时才写，最低版本写进 `metadata.yaml` 的 `astrbot_version`
+- [ ] README 头部：首行 `<img src="logo.png" alt="插件名" width="160" />`，中英两版都有，`alt` 已填，元素间无空行
+- [ ] 标签：`tags` 全量且一标签一概念；README 头部只列重点（可为变体，不虚构能力）
+- [ ] README 安装：未写分步安装；版本与协议端仅在确有限制时写，最低版本写进 `metadata.yaml` 的 `astrbot_version`
 - [ ] 许可证：未自行创建 `LICENSE`、README 中无许可证小节/徽章/许可证名（用户明确指定许可证时才建 `LICENSE`，仍不写进 README）
 - [ ] 版本号：日常不递增；仅发版任务改 `metadata.yaml` 的 `version`（与 CHANGELOG 新版本段、tag 一致），并同步 `@register`、README 徽章、i18n
-- [ ] 配置：新增配置项已按扁平 `{key: {...}}` 格式写进 `_conf_schema.json`，并在代码中同步读写
+- [ ] 配置：新增配置项已按扁平 `{key: {...}}` 写进 `_conf_schema.json` 并同步代码读写
 - [ ] 视图（改动或新增 `views/` 时）：通信只走 bridge、脚本外部 `type="module"`、bridge 有兜底报错、未用 `localStorage`/`target="_blank"`、上传限了大小、视图标题已进 i18n（细则见 [`docs/views.md`](docs/views.md)）
 - [ ] 提交信息：Conventional Commits + 8.1 内容标准——type 按「使用者得到什么」选、scope 一个模块词或无、subject ≤ 28 汉字只讲一件事、正文只在 diff 看不出来时才写、footer 按需补、空话与过程描述已删
 - [ ] 提交粒度：一个提交只做一件事，文档与代码同提交，无半成品 / 中间态 / 被废弃方案
