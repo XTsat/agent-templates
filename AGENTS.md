@@ -21,24 +21,13 @@
 ## 2. 目录结构（银律：新增模板遵循此结构）
 
 ```
-agent-templates/
-├── AGENTS.md                # 本文件：身份 + 硬规则 + 细则索引（≤ 10 KB）
-├── docs/                    # 细则页：不在自动注入范围内，需要时用 read 打开
-│   ├── templates.md         #   模板正文怎么写（章节要求、编写规范）
-│   └── git.md               #   提交信息每个字段该写什么
-├── README.md                # 对外总索引 + 模板选择指南
-├── skills/                  # 可被运行时加载的 skill（见 2.1）
-└── templates/
-    └── <项目类型>/
-        ├── AGENTS.md        # 入口：身份 + 硬规则 + 索引（核心 ≤ 12 KB）
-        ├── docs/            # 细则页（可选，非候选文件名）
-        └── scaffold/        # 项目骨架文件（*.template 后缀，可被复制到新项目）
-            ├── main.<ext>.template
-            ├── metadata.yaml.template      # 若有
-            ├── _conf_schema.json.template  # 若有
-            ├── CHANGELOG.md.template
-            └── README.md.template
+templates/<项目类型>/
+├── AGENTS.md        # 入口：身份 + 硬规则 + 索引（≤ 16 KB，见 §4.2）
+├── docs/            # 细则页（可选；非候选文件名，见 §1）
+└── scaffold/        # 骨架文件，后缀固定 .template
 ```
+
+完整目录（含 `docs/`、`skills/` 与各模板具体骨架）见根 [`README.md`](README.md) 的「目录结构」——那里是唯一真源，本节不重复。
 
 > 通用兜底：不适用专用模板的项目类型（Python/Go/Rust 库、CLI、脚本、文档站等）使用 `templates/generic/`，判定顺序为 `astrbot-plugin` → `nextjs-webapp` → `generic`。
 
@@ -69,6 +58,7 @@ agent-templates/
 | 判断某条模板规则该怎么措辞、要不要给正反例 | [`docs/templates.md`](docs/templates.md) → 二、编写规范 |
 | 判断该递增哪个模板版本、递增哪一档（patch/minor/major） | [`docs/templates.md`](docs/templates.md) → 「模板版本」条 |
 | 写提交信息（type 怎么选、scope 取什么、正文要不要写、footer 放什么） | [`docs/git.md`](docs/git.md) |
+| 把模板用到新项目、往派生项目复制 | [`docs/workflow.md`](docs/workflow.md) |
 
 **规则冲突时：本文件的硬规则（第 4 节）优先于 `docs/` 下的任何说明。**
 
@@ -93,7 +83,7 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 |---|---|---|
 | 根 `AGENTS.md` | **10 KB** | 所有会话必读，越短越好；留足扩展空间 |
 | `docs/*.md`（每个） | **10 KB** | `read` 单次返回上限 50 KB，超过要分次读，模型会放弃 |
-| 模板 `AGENTS.md` 核心 | **12 KB** | 根文件 + 三个模板同批加载仍须全部放得下 |
+| 模板 `AGENTS.md` 核心 | **16 KB** | 根(9.0K)+三模板同批 59.5K < 65,536；单模板上限实测 18 KB，取 16 KB 留余量 |
 | 派生项目 `AGENTS.md` + `AGENTS.local.md` | **60 KB** | 两者共享同一预算，超了会整份丢弃较大的那个 |
 
 - 加内容前先量：`wc -c AGENTS.md docs/*.md templates/*/AGENTS.md`
@@ -108,15 +98,9 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 
 ---
 
-## 5.「自动提取模板」时的行为准则
+## 5. 提取模板（要点，细则见 [`docs/workflow.md`](docs/workflow.md)）
 
-当用户要求「让 agent 从这个仓库学习 agent 并应用」时：
-
-1. 在 `templates/` 下找到对应类型目录。判定依据：项目名含 `astrbot_plugin_` 前缀 → 用 `astrbot-plugin`；项目是 Next.js + TypeScript → 用 `nextjs-webapp`。
-2. 完整阅读该目录的 `AGENTS.md`，再按它的索引表读需要的 `docs/` 细则。
-3. 把 `scaffold/` 下的骨架文件复制到目标项目（去掉 `.template` 后缀）；`AGENTS.md` 一并复制，并原样保留头部的「模板版本」行——它是该项目日后与上游对齐版本的依据。**若该模板有 `docs/`，一并复制**（否则索引表里的指针会指向不存在的文件）。
-4. 按 AGENTS.md 的规范初始化目标项目，而不是照搬本仓库已有仓库的个别写法。
-5. 如果目标项目已有同名的 `AGENTS.md` / 配置文件，**先读再合并**，不得整文件覆盖丢失既有内容（参考多会话并行开发约束）。
+用户要求「让 agent 从这个仓库学习规范并用到某个项目」时：判定模板类型（`astrbot_plugin_` 前缀 → `astrbot-plugin`；Next.js + TS → `nextjs-webapp`；其余 → `generic`），读该模板 `AGENTS.md` 与其索引指向的 `docs/`，连同 `scaffold/` 与 `docs/` 一起复制过去。目标项目已有同名文件时**先读再合并**，不得整文件覆盖。
 
 ---
 
