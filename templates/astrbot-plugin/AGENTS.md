@@ -5,7 +5,7 @@
 >
 > 适用项目：`astrbot_plugin_*` 命名的 AstrBot 插件（Python）。
 >
-> **模板版本**：v0.2.0（2026-11-23） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
+> **模板版本**：v0.2.1（2026-11-23） —— 本行标记本文件对应的 `astrbot-plugin` 模板版本。回填项目内容时**不要改动本行**；只有从上游合并到新版本时才把它更新为合并到的版本。
 > **来源**：本文件是 [agent-templates](https://github.com/XTsat/agent-templates) 的 `templates/astrbot-plugin/AGENTS.md` 副本，最新版见该仓库 `main` 分支。
 > 用户说「更新 AGENTS」时按此流程：① 打开来源仓库该模板的 `AGENTS.md`，比对头部「模板版本」与本地是否一致——一致说明已是最新，直接结束，不必拉取逐节比对 → ② 不一致才拉取来源模板最新版 → ③ 与本地逐节比对（含 `docs/` 下各细则页）→ ④ 合并（保留本项目已回填的插件名、命令前缀、目录结构与项目特有约定）→ ⑤ 展示 diff 与改动清单，等用户确认后再落盘，并把头部「模板版本」同步改为合并到的版本。**禁止整文件覆盖**。
 
@@ -252,23 +252,30 @@ async def on_message(
 
 ---
 
-## 9. 最终检查清单（每次任务完成前）
+## 9. 最终检查清单
 
-- [ ] 架构：所选风格（单文件 / 分层多文件）与既有代码一致
+### 9.1 每次改动完成时（写完代码就查）
+
+- [ ] 架构：所选风格（单文件 / 分层多文件）与既有代码一致，新文件放对目录
 - [ ] 注释：只写 non-obvious reason，无残留中间状态、无被注释掉的旧代码
-- [ ] 日志：来源只有 `astrbot.api` 的 logger（无 `import logging` / `logging.getLogger` / 第三方日志库），`[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
-- [ ] CHANGELOG：`[Unreleased]` 已同步且**只写相对上一版的变化**，同一变化合并为一条，条目面向用户，保留他人既有记录
-- [ ] CHANGELOG 折叠：`[Unreleased]` 与最近 3 个版本段展开，第 4 个起每个版本段各自一个 `<details>`，首个折叠前有 `---` 分隔；带 `⚠️ 破坏性变更`（或含 `### 移除`）的版本永不折叠（细则见 [`docs/changelog-format.md`](docs/changelog-format.md)）
-- [ ] README：涉及用户可见变更时已同步更新，且面向用户书写（无实现原理与内部细节）
-- [ ] README 配置板块：> 4 项时按类别分组，单类 ≥ 4 项用 `<details>` 折叠且 summary 自解释，首次必填项没被藏进折叠
-- [ ] README 头部：首行 `<img src="logo.png" alt="插件名" width="160" />`，中英两版都有，`alt` 已填，元素间无空行
-- [ ] 标签：`tags` 全量且一标签一概念；README 头部只列重点（可为变体，不虚构能力）
-- [ ] README 安装：未写分步安装；版本与协议端仅在确有限制时写，最低版本写进 `metadata.yaml` 的 `astrbot_version`
-- [ ] 许可证：未自行创建 `LICENSE`、README 中无许可证小节/徽章/许可证名（用户明确指定许可证时才建 `LICENSE`，仍不写进 README）
-- [ ] 版本号：日常不递增；仅发版任务改 `metadata.yaml` 的 `version`（与 CHANGELOG 新版本段、tag 一致），并同步 `@register`、README 徽章、i18n
+- [ ] 日志：来源只有 `astrbot.api` 的 logger（无 `import logging` / `logging.getLogger` / 第三方日志库），带 `[{PLUGIN_NAME}]` 前缀，异常分类记录，无空 catch
+- [ ] README：涉及用户可见变更时已同步，且面向用户书写
 - [ ] 配置：新增配置项已按扁平 `{key: {...}}` 写进 `_conf_schema.json` 并同步代码读写
-- [ ] 视图（改动或新增 `views/` 时）：通信只走 bridge、脚本外部 `type="module"`、bridge 有兜底报错、未用 `localStorage`/`target="_blank"`、上传限了大小、视图标题已进 i18n（细则见 [`docs/views.md`](docs/views.md)）
-- [ ] 提交信息：Conventional Commits + 8.1 内容标准——type 按「使用者得到什么」选、scope 一个模块词或无、subject ≤ 28 汉字只讲一件事、正文只在 diff 看不出来时才写、footer 按需补、空话与过程描述已删
-- [ ] 提交粒度：一个提交只做一件事，文档与代码同提交，无半成品 / 中间态 / 被废弃方案
-- [ ] 提交前展示：已给出待提交文件清单、`git diff --stat`、2–3 个候选提交标题（逐条注明侧重并标出推荐项），并取得用户对本次改动的明确确认（一次性授权，未沿用上一轮）
 - [ ] 本地测试：`python -c "import main"` 无语法错误（或 ruff 格式通过）
+
+### 9.2 提交前（只在 commit 前查一次，不提交就不用过）
+
+- [ ] CHANGELOG：`[Unreleased]` 已同步且**只写相对上一版的变化**，同一变化合并为一条，条目面向用户，保留他人既有记录
+- [ ] 提交信息：Conventional Commits + §8 内容标准——type 按「使用者得到什么」选、scope 一个模块词或无、subject ≤ 28 汉字只讲一件事、正文只在 diff 看不出来时才写、空话已删
+- [ ] 提交粒度：一个提交只做一件事，文档与代码同提交，无半成品 / 中间态
+- [ ] 提交前展示：已给出文件清单、`git diff --stat`、2–3 个候选标题，并取得本轮明确确认
+
+### 9.3 按需检查（只在改动涉及该区域时）
+
+- [ ] 改了 `views/` → 通信只走 bridge、脚本外部 `type="module"`、bridge 有兜底报错、未用 `localStorage`/`target="_blank"`、上传限了大小、视图标题已进 i18n（细则见 [`docs/views.md`](docs/views.md)）
+- [ ] 发版 → 只改 `metadata.yaml` 的 `version`（与 CHANGELOG 版本段、tag 一致），并同步 `@register`、README 徽章、i18n
+- [ ] 新建项目 → 未自行创建 `LICENSE`、README 无许可证章节
+- [ ] 改了 `metadata.yaml` → `tags` 全量且一标签一概念；README 头部只列重点
+- [ ] 改了 README → 头部首行 `<img src="logo.png" alt="插件名" width="160" />`（中英两版都有、`alt` 已填）；配置 > 4 项时按类别分组、单类 ≥ 4 项折叠；未写分步安装
+- [ ] 改了 CHANGELOG 折叠 → `[Unreleased]` 与最近 3 段展开，第 4 段起各自 `<details>`，带 `⚠️ 破坏性变更` 的永不折叠（细则见 [`docs/changelog-format.md`](docs/changelog-format.md)）
+- [ ] 首次进入项目 → §1 的项目特定内容已回填，无残留占位
