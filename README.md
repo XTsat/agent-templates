@@ -1,8 +1,8 @@
 # agent-templates
 
-[![astrbot-plugin](https://img.shields.io/badge/astrbot--plugin-v0.2.1-blue?style=flat-square)](templates/astrbot-plugin/AGENTS.md)
-[![nextjs-webapp](https://img.shields.io/badge/nextjs--webapp-v0.2.1-blue?style=flat-square)](templates/nextjs-webapp/AGENTS.md)
-[![generic](https://img.shields.io/badge/generic-v0.2.1-blue?style=flat-square)](templates/generic/AGENTS.md)
+[![astrbot-plugin](https://img.shields.io/badge/astrbot--plugin-v0.2.2-blue?style=flat-square)](templates/astrbot-plugin/AGENTS.md)
+[![nextjs-webapp](https://img.shields.io/badge/nextjs--webapp-v0.2.2-blue?style=flat-square)](templates/nextjs-webapp/AGENTS.md)
+[![generic](https://img.shields.io/badge/generic-v0.2.2-blue?style=flat-square)](templates/generic/AGENTS.md)
 
 > 一套**可直接被 AI 编码代理（agent）自动读取并遵循**的项目规范模板仓库。
 > 每个模板目录都是**自包含**的：agent 只需读取对应模板的 `AGENTS.md`，即可一次性学会该类项目的全部约定（架构、代码规范、文档维护、提交流程）。
