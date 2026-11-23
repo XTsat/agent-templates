@@ -31,7 +31,7 @@ Conventional Commits：`<type>(<scope>): <subject>` + 可选正文 + 可选 foot
 
 ## 二、scope：一个词，取模块名
 
-- 合法取值：`templates`（跨模板）、`astrbot-plugin` / `nextjs-webapp` / `generic`（单模板）、`skills`、`docs`、`readme`、`changelog`。
+- 合法取值：`templates`（跨模板）、`astrbot-plugin` / `nextjs-webapp` / `generic`（单模板）、`skills`、`docs`、`tools`、`readme`、`changelog`。
 - 无明确归属就**省略**（`docs: 修正错别字` 比 `docs(misc): ...` 好）。
 - **禁止** `misc` / `update` / `all`；**禁止**用文件名当 scope（`docs(AGENTS.md)` ❌）。
 

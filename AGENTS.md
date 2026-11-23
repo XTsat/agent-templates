@@ -59,6 +59,7 @@ templates/<项目类型>/
 | 判断该递增哪个模板版本、递增哪一档（patch/minor/major） | [`docs/templates.md`](docs/templates.md) → 「模板版本」条 |
 | 写提交信息（type 怎么选、scope 取什么、正文要不要写、footer 放什么） | [`docs/git.md`](docs/git.md) |
 | 把模板用到新项目、往派生项目复制 | [`docs/workflow.md`](docs/workflow.md) |
+| 查派生项目版本差距、要不要跟进 | 跑 `tools/check-derived.sh`（见 [`docs/workflow.md`](docs/workflow.md) 五） |
 
 **规则冲突时：本文件的硬规则（第 4 节）优先于 `docs/` 下的任何说明。**
 
@@ -89,6 +90,7 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 - 加内容前先量：`wc -c AGENTS.md docs/*.md templates/*/AGENTS.md`
 - 超限时**外移**（进 `docs/`，非候选文件名）或**删除**，不要靠"再压一点"过关。
 - 派生项目侧优先**删重复内容**（如内嵌的 Changelog 副本），再考虑外移。
+- **派生项目版本以各自 `AGENTS.md` 头部的「模板版本」行为唯一真源**。查差距跑 `tools/check-derived.sh`；**禁止**手工维护版本汇总表——双写必然有一个是错的。**落后几个 patch 是常态**（模板高频发版），只有跨 minor/major 才值得跟进。
 
 ### 4.3 文档与一致性
 
@@ -109,7 +111,7 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 Conventional Commits：`<type>(<scope>): <subject>` + 可选正文 + 可选 footer。**只给格式等于没写**，以下四条是底线：
 
 - **type 按「读者得到什么」选**：改模板正文一律 `docs`；新增模板或骨架文件才用 `feat`；修正错误规范用 `fix`。
-- **scope 一个词**：`templates` / `astrbot-plugin` / `nextjs-webapp` / `generic` / `skills` / `docs` / `readme` / `changelog`；无归属就省略，禁止 `misc`/`update`/`all` 与文件名当 scope。
+- **scope 一个词**：`templates` / `astrbot-plugin` / `nextjs-webapp` / `generic` / `skills` / `docs` / `tools` / `readme` / `changelog`；无归属就省略，禁止 `misc`/`update`/`all` 与文件名当 scope。
 - **subject**：中文动宾短句（`新增`/`修复`/`调整`/`移除` 开头），≤ 28 汉字、整行 ≤ 72 字符、只讲一件事；禁用「优化」「完善」「修复若干问题」「更新文档」等空话。
 - **正文可选**：只在 diff 看不出来时才写（取舍理由、迁移动作、破坏性变更），≤ 5 条；不写验证过程、影响面盘点、版本号流水。**留空是常态。**
 
