@@ -14,8 +14,6 @@
 - **细则可就近外置**：篇幅大的示例与参考放在同目录 `docs/`，由 `AGENTS.md` 的索引表点名。**外置文件不得使用候选文件名**（`AGENTS.md` / `CLAUDE.md` / `AGENTS.local.md` / `CLAUDE.local.md`），否则它会重新进入同一份字节预算，等于没外置。
 - **独立可用**：模板不得依赖本仓库其它文件（agent 可能只被引到单个模板文件）。
 
-> **为什么不再要求「一个文件装下全部约定」**：DSH 每条指令链有 **65,536 字节**预算，超出后先**整份丢弃较宽泛的文件**，只剩最后一个文件时**截掉末尾**。把全部规范塞进一个文件，超限后**末尾的提交规则与检查清单会被静默截掉**。
-
 ---
 
 ## 2. 目录结构（银律：新增模板遵循此结构）
@@ -31,13 +29,7 @@ templates/<项目类型>/
 
 > 通用兜底：不适用专用模板的项目类型（Python/Go/Rust 库、CLI、脚本、文档站等）使用 `templates/generic/`，判定顺序为 `astrbot-plugin` → `nextjs-webapp` → `generic`。
 
-新增模板类型时：
-
-1. 在 `templates/<类型>/` 下写一份入口 `AGENTS.md`（身份 + 硬规则 + 索引）。
-2. 篇幅大的细则放 `templates/<类型>/docs/`，并在入口索引表点名。
-3. 在 `templates/<类型>/scaffold/` 下放骨架文件（后缀固定 `.template`）。
-4. 在根 `README.md` 的「模板选择指南」表中登记一行。
-5. 遵循 [`docs/templates.md`](docs/templates.md) 的章节要求与编写规范。
+新增模板类型的步骤见 [`docs/workflow.md`](docs/workflow.md)「一、新增模板类型」。
 
 ### 2.1 skills 目录
 
@@ -59,7 +51,7 @@ templates/<项目类型>/
 | 判断该递增哪个模板版本、递增哪一档（patch/minor/major） | [`docs/templates.md`](docs/templates.md) → 「模板版本」条 |
 | 写提交信息（type 怎么选、scope 取什么、正文要不要写、footer 放什么） | [`docs/git.md`](docs/git.md) |
 | 把模板用到新项目、往派生项目复制 | [`docs/workflow.md`](docs/workflow.md) |
-| 查派生项目版本差距、要不要跟进 | 跑 `tools/check-derived.sh`（见 [`docs/workflow.md`](docs/workflow.md) 五） |
+| 查派生项目版本差距、要不要跟进 | 跑 `tools/check-derived.sh`（见 [`docs/workflow.md`](docs/workflow.md) 四） |
 
 **规则冲突时：本文件的硬规则（第 4 节）优先于 `docs/` 下的任何说明。**
 
@@ -71,7 +63,7 @@ templates/<项目类型>/
 
 ### 4.1 提交与授权
 
-- **提交前必须先展示**：① 待提交文件清单；② `git diff --stat`；③ **2–3 个候选提交标题**（注明侧重并标出推荐项）。用户选定后才 commit。
+- **提交前必须先展示**：① 待提交文件清单；② `git diff --stat`；③ **2–3 个候选提交标题**（注明侧重并标出推荐项）。用户选定后才 commit。提交信息的 type/scope/subject/正文标准见 [`docs/git.md`](docs/git.md)。
 - **一轮只做一件事**：用户回答的是细节问题（tag 名、选哪个标题、方案 A/B）时，只完成该细节即停并汇报，**不得顺势推进下一个动作**（建完 tag 就提交、提交完就推送）。下一步等用户下一句话。
 - **push 前必须复述用户本轮原话**：如「依据你本轮说的『推送』，执行 push」；引不出原话就先问。同时展示待推送提交（hash + 标题）、目标分支与 tag，确认后才推。
 - **授权一次性，不延续**：确认只对当次动作生效。展示后改动再变（哪怕一行）、用户仅表示满意、授权来自上一轮 / 上一会话 / 恢复后的会话，均**不视为授权**；确认 commit ≠ 授权 push。
@@ -105,16 +97,3 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 ## 5. 提取模板（要点，细则见 [`docs/workflow.md`](docs/workflow.md)）
 
 用户要求「让 agent 从这个仓库学习规范并用到某个项目」时：判定模板类型（`astrbot_plugin_` 前缀 → `astrbot-plugin`；Next.js + TS → `nextjs-webapp`；其余 → `generic`），读该模板 `AGENTS.md` 与其索引指向的 `docs/`，连同 `scaffold/` 与 `docs/` 一起复制过去。目标项目已有同名文件时**先读再合并**，不得整文件覆盖。
-
----
-
-## 6. 提交信息标准（要点，细则见 [`docs/git.md`](docs/git.md)）
-
-Conventional Commits：`<type>(<scope>): <subject>` + 可选正文 + 可选 footer。**只给格式等于没写**，以下四条是底线：
-
-- **type 按「读者得到什么」选**：改模板正文一律 `docs`；新增模板或骨架文件才用 `feat`；修正错误规范用 `fix`。
-- **scope 一个词**：`templates` / `astrbot-plugin` / `nextjs-webapp` / `generic` / `skills` / `docs` / `tools` / `readme` / `changelog`；无归属就省略，禁止 `misc`/`update`/`all` 与文件名当 scope。
-- **subject**：中文动宾短句（`新增`/`修复`/`调整`/`移除` 开头），≤ 28 汉字、整行 ≤ 72 字符、只讲一件事；禁用「优化」「完善」「修复若干问题」「更新文档」等空话。
-- **正文可选**：只在 diff 看不出来时才写（取舍理由、迁移动作、破坏性变更），≤ 5 条；不写验证过程、影响面盘点、版本号流水。**留空是常态。**
-
-自查：`git log --oneline -10` 不看 diff 也能读懂每个提交做了什么。
