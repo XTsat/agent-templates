@@ -1,0 +1,21 @@
+# 派生项目必需锚点（generic 模板）
+#
+# 用途：tools/check-derived.sh 据此校验派生项目 AGENTS.md 的正文内容，
+#       而不只是头部版本号。改本模板正文时同步维护本文件。
+# 格式：<类型>|<严重度>|<标签>|<值>
+#   类型 text  —— 派生项目 AGENTS.md 必须出现该固定短语（grep -F）
+#   类型 docs  —— 正文引用了该路径时，派生项目必须真实存在该文件（悬挂指针 = 规则静默失效）
+#   严重度 blocker —— 缺失即告警，不受传播期豁免，退出码非零
+#   严重度 warn    —— 仅提示，不影响退出码
+#
+# 选词原则：只取「合并时一定保留、被重写时一定丢失」的稳定短语，
+#           不取章节编号或完整标题（派生项目允许回填、增删章节）。
+text|blocker|并行协议|多会话并行
+text|blocker|覆盖禁止|禁止整文件覆盖
+text|blocker|更新流程|更新 AGENTS
+text|warn|来源可追溯|agent-templates
+text|warn|版本行|模板版本
+docs|blocker|CHANGELOG 细则|docs/changelog.md
+docs|blocker|README 细则|docs/readme.md
+docs|blocker|提交细则|docs/commit.md
+docs|warn|注释/PR 细则|docs/notes.md

@@ -81,11 +81,13 @@ agent-templates/
 │   ├── git.md                   #   提交信息每个字段该写什么
 │   └── workflow.md              #   把模板用到新项目、往派生项目复制
 ├── tools/
-│   └── check-derived.sh         # 扫描本机派生项目，报告模板版本落后情况
+│   ├── check-derived.sh         # 扫描本机派生项目：版本轴 + 内容轴（锚点/悬挂 docs）
+│   └── sync-check.sh            # 单个派生项目一条命令拿差异（= --project）
 ├── LICENSE
 ├── templates/
 │   ├── astrbot-plugin/          # AstrBot 插件（Python）
 │   │   ├── AGENTS.md            #   入口规范（身份 + 硬规则 + 索引，agent 必读）
+│   │   ├── check-anchors.txt    #   内容核验锚点清单（各模板同；不占正文预算）
 │   │   └── scaffold/            #   项目骨架文件
 │   │       ├── main.py.template
 │   │       ├── metadata.yaml.template

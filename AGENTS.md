@@ -47,11 +47,11 @@ templates/<项目类型>/
 |---|---|
 | 写或改任何模板正文（章节怎么排、规范怎么写、示例怎么给） | [`docs/templates.md`](docs/templates.md) |
 | 新增模板类型、加骨架文件 | [`docs/templates.md`](docs/templates.md) → 一、章节要求 |
-| 判断某条模板规则该怎么措辞、要不要给正反例 | [`docs/templates.md`](docs/templates.md) → 二、编写规范 |
+| 判断某条模板规则该怎么措辞、要不要给正反例 | [`docs/templates.md`](docs/templates.md) → 三、编写规范 |
 | 判断该递增哪个模板版本、递增哪一档（patch/minor/major） | [`docs/templates.md`](docs/templates.md) → 「模板版本」条 |
 | 写提交信息（type 怎么选、scope 取什么、正文要不要写、footer 放什么） | [`docs/git.md`](docs/git.md) |
 | 把模板用到新项目、往派生项目复制 | [`docs/workflow.md`](docs/workflow.md) |
-| 查派生项目版本差距、要不要跟进 | 跑 `tools/check-derived.sh`（见 [`docs/workflow.md`](docs/workflow.md) 四） |
+| 查派生项目版本差距、内容是否被重写、要不要跟进 | 跑 `tools/check-derived.sh` / 单个项目跑 `tools/sync-check.sh <路径>`（见 [`docs/workflow.md`](docs/workflow.md) 四） |
 
 **规则冲突时：本文件的硬规则（第 4 节）优先于 `docs/` 下的任何说明。**
 
@@ -82,6 +82,7 @@ DSH 的指令预算为 **65,536 字节/条指令链**，扣掉 `<system-reminder
 | 派生项目 `AGENTS.md` + `AGENTS.local.md` | **60 KB** | 两者共享同一预算，超了会整份丢弃较大的那个 |
 
 - 加内容前先量：`wc -c AGENTS.md docs/*.md templates/*/AGENTS.md`
+- **`astrbot-plugin/AGENTS.md` 已贴近 16 KB 上限**（v0.2.3 约 16.0 KB，余量不足 0.2 KB）：给它加规则前必须先把等量内容外移进 `docs/`，不要靠压字数过关。
 - 超限时**外移**（进 `docs/`，非候选文件名）或**删除**，不要靠"再压一点"过关。
 - 派生项目侧优先**删重复内容**（如内嵌的 Changelog 副本），再考虑外移。
 - **派生项目版本以各自 `AGENTS.md` 头部的「模板版本」行为唯一真源**。查差距跑 `tools/check-derived.sh`；**禁止**手工维护版本汇总表——双写必然有一个是错的。**落后几个 patch 是常态**（模板高频发版），只有跨 minor/major 才值得跟进。
